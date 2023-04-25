@@ -102,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         GestureDetector(
           onTap: () {
-            // not sure if i should use push or pushReplacement here?
+            // not sure if i should use push or pushReplacement here? need to discuss with rasmus maybe?
             Navigator.push(context, SlideAnimationRoute(child: SignUpScreen(), slideRight: false));
           },
           child: const Text(
