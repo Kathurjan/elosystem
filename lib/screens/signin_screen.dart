@@ -1,5 +1,6 @@
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:elosystem/screens/signup_screen.dart';
+import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:elosystem/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +75,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 .height * 0.75,
             left: 32,
             right: 32,
-            child: signInButton(context, true, () {}),
+            child: signInButton(context, true, () {
+              //@TODO: add login logic here
+
+            }),
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.85,
@@ -98,8 +102,8 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SignUpScreen()));
+            // not sure if i should use push or pushReplacement here? need to discuss with rasmus maybe?
+            Navigator.push(context, SlideAnimationRoute(child: SignUpScreen(), slideRight: false));
           },
           child: const Text(
             "Sign Up",
