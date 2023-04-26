@@ -1,4 +1,5 @@
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
+import 'package:elosystem/screens/home_screen.dart';
 import 'package:elosystem/screens/signup_screen.dart';
 import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:elosystem/utils/color_utils.dart';
@@ -76,8 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
             left: 32,
             right: 32,
             child: signInButton(context, true, () {
-              //@TODO: add login logic here
-
+              Navigator.push(context,SlideAnimationRoute(child: HomeScreen(), slideRight: true));
             }),
           ),
           Positioned(
