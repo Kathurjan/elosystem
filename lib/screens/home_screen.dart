@@ -42,6 +42,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ]),
                 ),
+                Positioned(
+                    top: MediaQuery.of(context).size.height * 0.5,
+                    left: 0,
+                    right: 0,
+                  child: Column(children: [
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                      ),
+                      onPressed: () { },
+                      child: Text('Assignment'),
+                    ),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                      ),
+                      onPressed: () { },
+                      child: Text('Quiz'),
+                    ),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                      ),
+                      onPressed: () { },
+                      child: Text('Score'),
+                    ),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                      ),
+                      onPressed: () { },
+                      child: Text('Stats'),
+                    ),
+                  ],)
+                ),
               ],
             )));
   }
