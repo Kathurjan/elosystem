@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Positioned(
           top: MediaQuery.of(context).size.height * 0.1,
-          child: Row(children: [
+          child: Column(children: [
             Image.asset(
               "assets/images/placeholder-profile.png",
               width: 100,
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fit: BoxFit.contain,
             ),
             Text(
-              "Welcome",
+              "Name",
               style: TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.bold,
@@ -38,9 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ]),
         ),
-        Positioned(
-            top: MediaQuery.of(context).size.height * 0.25,
-            child: Text("Name here"))
       ],
     ));
   }
