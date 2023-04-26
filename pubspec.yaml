@@ -38,6 +38,11 @@ dependencies:
   firebase_core: ^2.10.0
   firebase_auth: ^4.4.2
   qr_flutter: ^4.0.0
+<<<<<<< Updated upstream
+=======
+  cloud_firestore: ^4.5.2
+
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:
