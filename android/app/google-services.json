@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "665622974785",
+    "project_id": "elosystem-99e38",
+    "storage_bucket": "elosystem-99e38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665622974785:android:01749483928140c8b811c0",
+        "android_client_info": {
+          "package_name": "com.example.elosystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665622974785-5m1ermkogdnak7vf366q4uf6128v1i81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaoCD-3Tz3G_R2_26RVxlUIbzdpJoOl7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "665622974785-5m1ermkogdnak7vf366q4uf6128v1i81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
