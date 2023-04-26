@@ -1,4 +1,5 @@
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
+import 'package:elosystem/screens/home_screen.dart';
 import 'package:elosystem/screens/signup_screen.dart';
 import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:elosystem/utils/color_utils.dart';

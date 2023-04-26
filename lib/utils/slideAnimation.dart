@@ -4,7 +4,7 @@ class SlideAnimationRoute<T> extends PageRouteBuilder<T> {
   final Widget child;
   final bool slideRight;
 
-  SlideAnimationRoute({required this.child, this.slideRight = true})
+  SlideAnimationRoute({required this.child, this.slideRight = false})
       : super(
     pageBuilder: (context, animation, secondaryAnimation) => child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
