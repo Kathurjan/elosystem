@@ -3,7 +3,11 @@ import 'package:elosystem/screens/home_screen.dart';
 import 'package:elosystem/screens/signup_screen.dart';
 import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:elosystem/utils/color_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -70,14 +74,23 @@ class _SignInScreenState extends State<SignInScreen> {
                 _passwordTextController),
           ),
           Positioned(
-            top: MediaQuery
-                .of(context)
-                .size
-                .height * 0.75,
+            top: MediaQuery.of(context).size.height * 0.75,
             left: 32,
             right: 32,
-            child: signInButton(context, true, () {
-              Navigator.push(context,SlideAnimationRoute(child: HomeScreen(), slideRight: true));
+            child: signInButton(context, true, () async {
+              AuthService authService = AuthService();
+
+              try {
+                await authService.signInWithEmailAndPassword(
+                  _emailController.text,
+                  _passwordTextController.text,
+                );
+                print("User signed in");
+                Navigator.push(context, SlideAnimationRoute(child: HomeScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+              } catch (error) {
+                print("Error signing in user: $error");
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error signing in user: $error")));
+              }
             }),
           ),
           Positioned(

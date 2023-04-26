@@ -1,8 +1,11 @@
 import 'package:elosystem/screens/signin_screen.dart';
 import 'package:elosystem/utils/slideAnimation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../reusable_widgets/resuable_widgets.dart';
+import '../utils/auth_service.dart';
 import '../utils/color_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -81,15 +84,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _passwordTextController),
             ),
             Positioned(
-              top: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.75,
+              top: MediaQuery.of(context).size.height * 0.75,
               left: 32,
               right: 32,
-              child: signInButton(context, false, () {
-                // not sure if i should use push or pushReplacement here?
-                Navigator.push(context,SlideAnimationRoute(child: SignInScreen(), slideRight: true));//TODO: Add sign up logic
+              child: signInButton(context, false, () async {
+                AuthService authService = AuthService();
+
+                try {
+                  await authService.signUpWithEmailAndPassword(
+                    _emailController.text,
+                    _passwordTextController.text,
+                  );
+                  print("User created");
+                  Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true));
+                } catch (error) {
+                  print("Error creating user: $error");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error creating user: $error")));
+                }
               }),
             ),
           ],
