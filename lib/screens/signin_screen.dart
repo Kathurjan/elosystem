@@ -79,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
             right: 32,
             child: signInButton(context, true, () async {
               AuthService authService = AuthService();
-
+                // ignore this need it for checking something else, will delete later
               try {
                 await authService.signInWithEmailAndPassword(
                   _emailController.text,
