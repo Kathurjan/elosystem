@@ -94,6 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   await authService.signUpWithEmailAndPassword(
                     _emailController.text,
                     _passwordTextController.text,
+                    _userNameController.text,
                   );
                   print("User created");
                   Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true));
