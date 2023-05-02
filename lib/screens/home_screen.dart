@@ -15,7 +15,7 @@ import '../utils/slideAnimation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
+//somethingshitty mads did
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
