@@ -38,4 +38,17 @@ class AuthService {
       rethrow;
     }
   }
+  Future<bool> isUserStudent() async {
+    final currentUser = _firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw FirebaseAuthException(message: 'No user signed in', code: '');
+    }
+    final userDoc = await _usersCollection.doc(currentUser.uid).get();
+    final userType = (userDoc.data() as Map<String, dynamic>)?['userType'] as String?;
+    if (userType == 'student') {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
