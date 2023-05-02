@@ -1,4 +1,4 @@
-import 'package:elosystem/screens/quiz_screen.dart';
+import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
