@@ -85,8 +85,15 @@ class _SignInScreenState extends State<SignInScreen> {
                   _emailController.text,
                   _passwordTextController.text,
                 );
+                if(await authService.isUserStudent()){
+                  Navigator.push(context, SlideAnimationRoute(child: HomeScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                }
+                else if (await authService.isUserStudent().toString() == "false"){
+                  Navigator.push(context, SlideAnimationRoute(child: HomeScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                }
+
                 print("User signed in");
-                Navigator.push(context, SlideAnimationRoute(child: HomeScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+
               } catch (error) {
                 print("Error signing in user: $error");
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error signing in user: $error")));

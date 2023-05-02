@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../reusable_widgets/resuable_widgets.dart';
 import '../../utils/color_utils.dart';
-
+/*
 class QuizScreen extends StatefulWidget {
   const QuizScreen({Key? key}) : super(key: key);
 
@@ -55,3 +55,4 @@ class _QuizScreenState extends State {
     );
   }
 }
+*/
