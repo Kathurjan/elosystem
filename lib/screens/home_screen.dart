@@ -1,5 +1,5 @@
 import 'package:elosystem/screens/assignment_screen.dart';
-import 'package:elosystem/screens/quiz_screen.dart';
+import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:elosystem/screens/score_screen.dart';
 import 'package:elosystem/screens/signin_screen.dart';
 import 'package:elosystem/screens/signup_screen.dart';

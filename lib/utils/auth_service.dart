@@ -45,12 +45,7 @@ class AuthService {
       rethrow;
     }
   }
-
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-  }
-
-  Future<bool> isUserStudent() async {
+ Future<bool> isUserStudent() async {
     final currentUser = _firebaseAuth.currentUser;
     if (currentUser == null) {
       throw FirebaseAuthException(message: 'No user signed in', code: '');
@@ -58,9 +53,9 @@ class AuthService {
     final userDoc = await _usersCollection.doc(currentUser.uid).get();
     final userType = (userDoc.data() as Map<String, dynamic>)?['userType'] as String?;
     if (userType == 'student') {
-     return true;
-      } else {
-        return false;
+      return true;
+    } else {
+      return false;
+    }
   }
-}
-}
+  }
