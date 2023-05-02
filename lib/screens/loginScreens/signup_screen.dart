@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             left: 32,
             right: 32,
             child: signInButton(context, false, () async {
-              AuthService authService = AuthService();
+              AuthService authService = AuthService.instance();
 
               try {
                 await authService.signUpWithEmailAndPassword(
