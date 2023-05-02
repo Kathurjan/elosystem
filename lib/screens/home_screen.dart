@@ -1,10 +1,13 @@
 import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
+import 'package:elosystem/screens/assignment_screen.dart';
+import 'package:elosystem/screens/score_screen.dart';
+import 'package:elosystem/screens/signin_screen.dart';
+import 'package:elosystem/screens/stats_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/auth_service.dart';
-
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
 
@@ -33,9 +36,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       child: Padding(
-          padding: const EdgeInsets.only(left: 50.0, right: 50.0),
+          padding: const EdgeInsets.only(left: 00.0, right: 00.0),
           child: Stack(
             children: <Widget>[
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.05,
+                left: 0,
+                child: Column(
+                  children: [
+                    ReturnButton("Logout", context, () async {
+                      Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                    }
+                    ),
+                  ]
+                ),
+              ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.1,
                 left: 0,
@@ -82,20 +97,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   child: Column(
                     children: [
-                      RoutingButton("Quiz", context, () async {
-                          Navigator.push(context, SlideAnimationRoute(child: QuizScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                      RoutingButton("Assignment", context, () async {
+                          Navigator.push(context, SlideAnimationRoute(child: AssignmentScreen(), slideRight: true)); // Navigate to the screen after successful sign in
                         }
                       ),
-                      SizedBox(
-                        height: 20,
+                      SizedBox(width: 10.0,
+                        height: 10.0),
+                      RoutingButton("Quiz", context, () async {
+                        Navigator.push(context, SlideAnimationRoute(child: QuizScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                      }
                       ),
+                      SizedBox(width: 10.0,
+                          height: 10.0),
                       // RoutingButton("Score", "path"),
-                      SizedBox(
-                        height: 20,
+                      RoutingButton("Score", context, () async {
+                        Navigator.push(context, SlideAnimationRoute(child: ScoreScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                      }
                       ),
+                      SizedBox(width: 10.0,
+                          height: 10.0),
                       // RoutingButton("Stats", "path"),
-                      SizedBox(
-                        height: 20,
+                      RoutingButton("Stats", context, () async {
+                        Navigator.push(context, SlideAnimationRoute(child: StatsScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                      }
                       ),
                       // RoutingButton("Quiz", "path"),
                     ],
