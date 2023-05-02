@@ -63,7 +63,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                       fit: BoxFit.contain,
                     ),
                     Text(
-                      "Marcus Petersen",
+                      "Teacher",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
