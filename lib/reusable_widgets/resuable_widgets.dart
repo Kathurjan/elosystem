@@ -70,6 +70,24 @@ RoutingButton(String text, BuildContext context, Function onTap) {
 
         minimumSize: MaterialStateProperty.all(const Size(200, 20)),
       ),
-      onPressed: () {},
+      onPressed: () {
+        onTap();
+      },
+      child: Text("$text"));
+}
+
+ReturnButton(String text, BuildContext context, Function onTap) {
+  return ElevatedButton(
+      style: ButtonStyle(
+        textStyle: MaterialStateProperty.all(
+          const TextStyle(fontSize: 15),
+        ),
+        padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+
+        minimumSize: MaterialStateProperty.all(const Size(50, 15)),
+      ),
+      onPressed: () {
+        onTap();
+      },
       child: Text("$text"));
 }
