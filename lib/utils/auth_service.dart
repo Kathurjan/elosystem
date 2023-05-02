@@ -17,7 +17,7 @@ class AuthService {
       // Create a new user document in Firestore using the user's uid as the document ID
       await _usersCollection.doc(userCredential.user!.uid).set({
         'email': email,
-        'userType': 'student',
+        'userType': 'teacher',
         // add any additional fields we may want to store for the user
         'userName': userName,
       });
@@ -45,17 +45,13 @@ class AuthService {
       rethrow;
     }
   }
- Future<bool> isUserStudent() async {
+  Future<String> getUserType() async {
     final currentUser = _firebaseAuth.currentUser;
     if (currentUser == null) {
       throw FirebaseAuthException(message: 'No user signed in', code: '');
     }
     final userDoc = await _usersCollection.doc(currentUser.uid).get();
     final userType = (userDoc.data() as Map<String, dynamic>)?['userType'] as String?;
-    if (userType == 'student') {
-      return true;
-    } else {
-      return false;
-    }
+    return userType.toString();
   }
   }
