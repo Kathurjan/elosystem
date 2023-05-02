@@ -16,96 +16,87 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _userNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    hexStringToColor("fdbb2d"),
-                    hexStringToColor("22c1c3"),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+    return Scaffold(
+        body: SingleChildScrollView(
+            child: Container(
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  hexStringToColor("fdbb2d"),
+                  hexStringToColor("22c1c3"),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
-            Positioned(
-              top: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.1,
-              left: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.5 - 80,
-              child: Image.asset(
-                'assets/images/easv-logo-transparent.png',
-                width: 160,
-                fit: BoxFit.contain,
-              ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.1,
+            left: MediaQuery.of(context).size.width * 0.5 - 80,
+            child: Image.asset(
+              'assets/images/easv-logo-transparent.png',
+              width: 160,
+              fit: BoxFit.contain,
             ),
-            Positioned(
-              top: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.45,
-              left: 32,
-              right: 32,
-              child: resuableTextField(
-                  "Email", Icons.person_3_outlined, false, _emailController),
-            ),
-            Positioned(
-              top: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.55,
-              left: 32,
-              right: 32,
-              child: resuableTextField(
-                  "UserName", Icons.person_3_outlined, false, _userNameController),
-            ),
-            Positioned(
-              top: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.65,
-              left: 32,
-              right: 32,
-              child: resuableTextField(
-                  "PassWord", Icons.lock_clock_outlined, true,
-                  _passwordTextController),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.75,
-              left: 32,
-              right: 32,
-              child: signInButton(context, false, () async {
-                AuthService authService = AuthService();
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.45,
+            left: 32,
+            right: 32,
+            child: resuableTextField(
+                "Email", Icons.person_3_outlined, false, _emailController),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.55,
+            left: 32,
+            right: 32,
+            child: resuableTextField("UserName", Icons.person_3_outlined, false,
+                _userNameController),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.65,
+            left: 32,
+            right: 32,
+            child: resuableTextField("PassWord", Icons.lock_clock_outlined,
+                true, _passwordTextController),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.75,
+            left: 32,
+            right: 32,
+            child: signInButton(context, false, () async {
+              AuthService authService = AuthService();
 
-                try {
-                  await authService.signUpWithEmailAndPassword(
-                    _emailController.text,
-                    _passwordTextController.text,
-                    _userNameController.text,
-                  );
-                  print("User created");
-                  Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true));
-                } catch (error) {
-                  print("Error creating user: $error");
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error creating user: $error")));
-                }
-              }),
-            ),
-          ],
-        ),
-      );
+              try {
+                await authService.signUpWithEmailAndPassword(
+                  _emailController.text,
+                  _passwordTextController.text,
+                  _userNameController.text,
+                );
+                print("User created");
+                Navigator.push(
+                    context,
+                    SlideAnimationRoute(
+                        child: SignInScreen(), slideRight: true));
+              } catch (error) {
+                print("Error creating user: $error");
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error creating user: $error")));
+              }
+            }),
+          ),
+        ],
+      ),
+    )));
   }
 }
