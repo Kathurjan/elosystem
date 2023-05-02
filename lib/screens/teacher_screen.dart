@@ -11,13 +11,13 @@ import '../utils/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class TeacherScreen extends StatefulWidget {
+  const TeacherScreen({Key? key}) : super(key: key);
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TeacherScreen> createState() => _TeacherScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TeacherScreenState extends State<TeacherScreen> {
 
 
   @override
