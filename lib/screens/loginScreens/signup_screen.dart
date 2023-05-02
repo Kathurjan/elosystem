@@ -1,12 +1,12 @@
-import 'package:elosystem/screens/signin_screen.dart';
+import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import '../reusable_widgets/resuable_widgets.dart';
-import '../utils/auth_service.dart';
-import '../utils/color_utils.dart';
+import '../../reusable_widgets/resuable_widgets.dart';
+import '../../utils/auth_service.dart';
+import '../../utils/color_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

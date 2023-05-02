@@ -1,20 +1,20 @@
 import 'package:elosystem/screens/home_screen.dart';
-import 'package:elosystem/screens/signin_screen.dart';
+import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../reusable_widgets/resuable_widgets.dart';
-import '../utils/color_utils.dart';
-import '../utils/slideAnimation.dart';
+import '../../reusable_widgets/resuable_widgets.dart';
+import '../../utils/color_utils.dart';
+import '../../utils/slideAnimation.dart';
 
-class AssignmentScreen extends StatefulWidget {
-  const AssignmentScreen({Key? key}) : super(key: key);
+class ScoreScreen extends StatefulWidget {
+  const ScoreScreen({Key? key}) : super(key: key);
 
   @override
-  _AssignmentScreenState createState() => _AssignmentScreenState();
+  _ScoreScreenState createState() => _ScoreScreenState();
 }
 
-class _AssignmentScreenState extends State {
+class _ScoreScreenState extends State {
 
   Widget build(BuildContext context) {
     return Scaffold(
