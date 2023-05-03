@@ -1,12 +1,10 @@
-import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../utils/auth_service.dart';
-
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
+import 'quizScreens/quizScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
