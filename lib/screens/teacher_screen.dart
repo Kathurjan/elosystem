@@ -19,6 +19,8 @@ class TeacherScreen extends StatefulWidget {
 
 class _TeacherScreenState extends State<TeacherScreen> {
 
+
+  AuthService authService = AuthService.instance();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
