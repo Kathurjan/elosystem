@@ -76,10 +76,13 @@ class AuthService {
     }
     final userDoc = await _usersCollection.doc(currentUser.uid).get();
     final userName = (userDoc.data() as Map<String, dynamic>)?['userName'] as String?;
+    print(userName);
     return userName.toString();
 
   }
-
+  // return currentuser
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
   // method used for signing out
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
