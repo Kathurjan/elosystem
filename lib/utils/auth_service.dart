@@ -34,6 +34,7 @@ class AuthService {
         // add any additional fields we may want to store for the user
         'userName': userName,
         'Score': 0,
+        'photoUrl': '',
       });
 
       return userCredential;
@@ -91,4 +92,15 @@ class AuthService {
     return _firebaseAuth.currentUser;
 
 }
+
+  Future<void> updateUserPhotoUrl(String uid, String photoUrl) async {
+    try {
+      await _usersCollection.doc(uid).update({'photoUrl': photoUrl});
+    } catch (e) {
+      print('Error updating user photo URL: $e');
+      rethrow;
+    }
+  }
+
+
 }

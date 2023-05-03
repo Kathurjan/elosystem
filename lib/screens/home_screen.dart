@@ -1,9 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
@@ -43,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasError) {
@@ -62,7 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 SlideAnimationRoute(
-                                    child: SignInScreen(), slideRight: true));
+                                    child: const SignInScreen(),
+                                    slideRight: true));
                           } catch (error) {
                             print("Error signing out: $error");
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -76,15 +83,34 @@ class _HomeScreenState extends State<HomeScreen> {
                         right: 0,
                         child: Column(
                           children: [
-                            Image.asset(
-                              "assets/images/placeholder-profile.png",
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.contain,
-                            ),
+                            AbsorbPointer(
+                                absorbing: false,
+                                child: InkWell(
+                                  onTap: () {
+                                    print('Profile picture tapped');
+                                    _updateProfilePicture();
+                                    setState(() {});
+                                  },
+                                  child:
+                                      authService.getCurrentUser()!.photoURL !=
+                                              null
+                                          ? CircleAvatar(
+                                              radius: 50,
+                                              backgroundImage: NetworkImage(
+                                                  authService
+                                                      .getCurrentUser()!
+                                                      .photoURL!),
+                                            )
+                                          : Image.asset(
+                                              "assets/images/placeholder-profile.png",
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.contain,
+                                            ),
+                                )),
                             Text(
                               snapshot.data ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -121,36 +147,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: AssignmentScreen(),
+                                        child: const AssignmentScreen(),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),
-                              SizedBox(width: 10.0, height: 10.0),
+                              const SizedBox(width: 10.0, height: 10.0),
                               RoutingButton("Quiz", context, () async {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: QuizScreen(),
+                                        child: const QuizScreen(),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),
-                              SizedBox(width: 10.0, height: 10.0),
+                              const SizedBox(width: 10.0, height: 10.0),
                               // RoutingButton("Score", "path"),
                               RoutingButton("Score", context, () async {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: ScoreScreen(),
+                                        child: const ScoreScreen(),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),
-                              SizedBox(width: 10.0, height: 10.0),
+                              const SizedBox(width: 10.0, height: 10.0),
                               // RoutingButton("Stats", "path"),
                               RoutingButton("Stats", context, () async {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: StatsScreen(),
+                                        child: const StatsScreen(),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),
@@ -162,5 +188,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             )));
+  }
+
+  Future<void> _updateProfilePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      try {
+        // Upload the file to Firebase Storage
+        final storage = FirebaseStorage.instance;
+        final user = authService.getCurrentUser();
+        if (user != null) {
+          final ref = storage.ref().child('profile_images').child(user.uid);
+          await ref.putFile(imageFile);
+
+          // Update the user profile
+          final photoUrl = await ref.getDownloadURL();
+          await user.updatePhotoURL(photoUrl);
+
+          // Update the Firestore document using AuthService method
+          await authService.updateUserPhotoUrl(user.uid, photoUrl);
+
+          setState(() {}); // Rebuild the widget to reflect the changes
+        }
+      } catch (e) {
+        print('Error updating profile picture: $e');
+      }
+    }
   }
 }
