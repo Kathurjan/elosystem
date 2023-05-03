@@ -69,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
             left: 32,
             right: 32,
             child: signInButton(context, true, () async {
-              AuthService authService = AuthService();
+              AuthService authService = AuthService.instance();
               try {
                 await authService.signInWithEmailAndPassword(
                   _emailController.text,
