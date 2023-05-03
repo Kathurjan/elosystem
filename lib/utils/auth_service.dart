@@ -33,6 +33,8 @@ class AuthService {
         'userType': 'teacher',
         // add any additional fields we may want to store for the user
         'userName': userName,
+        'Score': 0,
+        'photoUrl': '',
       });
 
       return userCredential;
@@ -80,11 +82,25 @@ class AuthService {
     return userName.toString();
 
   }
-  // return currentuser
-  User? getCurrentUser() {
-    return _firebaseAuth.currentUser;
+
   // method used for signing out
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+  // return currentuser
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
+
+}
+
+  Future<void> updateUserPhotoUrl(String uid, String photoUrl) async {
+    try {
+      await _usersCollection.doc(uid).update({'photoUrl': photoUrl});
+    } catch (e) {
+      print('Error updating user photo URL: $e');
+      rethrow;
+    }
+  }
+
+
 }
