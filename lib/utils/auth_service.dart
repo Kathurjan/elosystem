@@ -33,6 +33,7 @@ class AuthService {
         'userType': 'teacher',
         // add any additional fields we may want to store for the user
         'userName': userName,
+        'Score': 0,
       });
 
       return userCredential;
@@ -80,11 +81,14 @@ class AuthService {
     return userName.toString();
 
   }
-  // return currentuser
-  User? getCurrentUser() {
-    return _firebaseAuth.currentUser;
+
   // method used for signing out
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+  // return currentuser
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
+
+}
 }
