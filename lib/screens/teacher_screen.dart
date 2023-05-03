@@ -10,7 +10,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
-import 'home_screen.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
@@ -43,17 +42,14 @@ class _TeacherScreenState extends State<TeacherScreen> {
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.05,
                 left: 0,
-                child: signOutButton("Sign out", context, () async {
-                  AuthService authService = AuthService.instance();
-                  try {
-                    await authService.signOut();
-                      Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true));
-                  } catch (error) {
-                    print("Error signing out: $error");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Error signing out: $error")));
-                  }
-                }),
+                child: Column(
+                  children: [
+                    ReturnButton("Logout", context, () async {
+                      Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                    }
+                    ),
+                  ]
+                ),
               ),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.1,
