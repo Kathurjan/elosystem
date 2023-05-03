@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     ReturnButton("Logout", context, () async {
-                      Navigator.push(context, SlideAnimationRoute(child: SignInScreen(), slideRight: true)); // Navigate to the screen after successful sign in
+                      Navigator.push(context, SlideAnimationRoute(child: , slideRight: true)); // Navigate to the screen after successful sign in
                     }
                     ),
                   ]
