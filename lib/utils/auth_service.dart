@@ -79,4 +79,9 @@ class AuthService {
     return userName.toString();
 
   }
+
+  // method used for signing out
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
 }
