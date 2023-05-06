@@ -1,14 +1,14 @@
 class Questionaire {
-  List<Question> questions = [];
+  List<QuestionDTO> questions = [];
 
   Questionaire(this.questions);
 }
 
-class Question {
+class QuestionDTO {
   List<AnswerObj> answers = [];
   String questionText = "";
 
-  Question(this.answers, this.questionText);
+  QuestionDTO(this.answers, this.questionText);
 }
 
 class AnswerObj{
@@ -25,7 +25,7 @@ class fakeObject {
   late Questionaire questionaire;
 
   fakeObject(){
-    var _question1 = Question([
+    var _question1 = QuestionDTO([
       AnswerObj(2, "txt")
     ], "Test1");
     this.questionaire = Questionaire([_question1]);

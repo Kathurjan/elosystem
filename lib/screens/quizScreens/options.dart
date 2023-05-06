@@ -15,18 +15,28 @@ class Quiz extends StatelessWidget {
     required this.questionIndex,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+    // I want it to display a question in the format Question widget, then display the list of answers to said question in Answer widget
+
+
     return Column(
       children: [
         Question(
           questionaire.questions[questionIndex].questionText,
         ), //Question
-        ...(questionaire.questions[questionIndex].answers as List<Map<String, Object>>)
-            .forEach((element) {return Answer (answerQuestion(element.)) })
-        )
+          questionList(questionaire.questions[questionIndex])
       ],
     ); //Column
+  }
+
+  Widget questionList(QuestionDTO question){
+    List<Widget> _widgetList = <Widget>[];
+    for(var i = 0; i < question.answers.length; i++){
+      _widgetList.add(Answer(answerQuestion(question.answers[i].Score), question.answers[i].txt));
+    }
+    return Column(children: _widgetList);
   }
 }
 
