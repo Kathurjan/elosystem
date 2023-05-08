@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: const QuizScreen(),
+                                        child: QuizScreen(context),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),

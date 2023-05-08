@@ -22,7 +22,6 @@ class Result extends StatelessWidget {
       resultText = 'You need to work hard!';
     } else {
       resultText = 'This is a poor score!';
-      print(resultScore);
     }
     return resultText;
   }

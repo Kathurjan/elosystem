@@ -8,6 +8,7 @@ class Quiz extends StatelessWidget {
   final int questionIndex;
   final Function answerQuestion;
 
+
   const Quiz({
     Key? key,
     required this.questionaire,
@@ -34,7 +35,7 @@ class Quiz extends StatelessWidget {
   Widget questionList(QuestionDTO question){
     List<Widget> _widgetList = <Widget>[];
     for(var i = 0; i < question.answers.length; i++){
-      _widgetList.add(Answer(answerQuestion(question.answers[i].Score), question.answers[i].txt));
+      _widgetList.add(Answer(answerQuestion, question.answers[i].txt, question.answers[i].Score));
     }
     return Column(children: _widgetList);
   }
