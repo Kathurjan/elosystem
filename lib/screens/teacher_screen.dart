@@ -9,6 +9,7 @@ import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import '../utils/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
+import 'QRScannerScreen.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
@@ -130,15 +131,16 @@ class _TeacherScreenState extends State<TeacherScreen> {
                                             true)); // Navigate to the screen after successful sign in
                               }),
                               SizedBox(width: 10.0, height: 10.0),
-                              // RoutingButton("Stats", "path"),
                               RoutingButton("Stats", context, () async {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: StatsScreen(),
-                                        slideRight:
-                                            true)); // Navigate to the screen after successful sign in
+                                        child: QRScannerScreen(),  // Replace StatsScreen() with QRScannerScreen()
+                                        slideRight: true
+                                    )
+                                );
                               }),
+
                               // RoutingButton("Quiz", "path"),
                             ],
                           )),
