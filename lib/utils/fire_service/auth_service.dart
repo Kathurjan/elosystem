@@ -1,6 +1,10 @@
 // auth_service.dart
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -93,12 +97,29 @@ class AuthService {
 
 }
 
-  Future<void> updateUserPhotoUrl(String uid, String photoUrl) async {
-    try {
-      await _usersCollection.doc(uid).update({'photoUrl': photoUrl});
-    } catch (e) {
-      print('Error updating user photo URL: $e');
-      rethrow;
+  Future<void> updateProfilePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      try {
+        // Upload the file to Firebase Storage
+        final user = _firebaseAuth.currentUser;
+        if (user != null) {
+          final ref = FirebaseStorage.instance.ref().child('profile_images').child(user.uid);
+          await ref.putFile(imageFile);
+
+          // Update the user profile
+          final photoUrl = await ref.getDownloadURL();
+          await user.updatePhotoURL(photoUrl);
+
+          // Update the Firestore document
+          await _usersCollection.doc(user.uid).update({'photoUrl': photoUrl});
+        }
+      } catch (e) {
+        print('Error updating profile picture: $e');
+      }
     }
   }
 

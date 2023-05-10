@@ -7,7 +7,7 @@ import 'package:elosystem/utils/slideAnimation.dart';
 import 'package:elosystem/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/auth_service.dart';
+import '../../utils/fire_service/auth_service.dart';
 import '../teacher_screen.dart';
 
 class SignInScreen extends StatefulWidget {

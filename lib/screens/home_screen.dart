@@ -5,16 +5,14 @@ import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../utils/auth_service.dart';
+import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
 
@@ -88,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: InkWell(
                                   onTap: () {
                                     print('Profile picture tapped');
-                                    _updateProfilePicture();
+                                    authService.updateProfilePicture();
                                     setState(() {});
                                   },
                                   child:
@@ -188,34 +186,5 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             )));
-  }
-
-  Future<void> _updateProfilePicture() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      try {
-        // Upload the file to Firebase Storage
-        final storage = FirebaseStorage.instance;
-        final user = authService.getCurrentUser();
-        if (user != null) {
-          final ref = storage.ref().child('profile_images').child(user.uid);
-          await ref.putFile(imageFile);
-
-          // Update the user profile
-          final photoUrl = await ref.getDownloadURL();
-          await user.updatePhotoURL(photoUrl);
-
-          // Update the Firestore document using AuthService method
-          await authService.updateUserPhotoUrl(user.uid, photoUrl);
-
-          setState(() {}); // Rebuild the widget to reflect the changes
-        }
-      } catch (e) {
-        print('Error updating profile picture: $e');
-      }
-    }
   }
 }

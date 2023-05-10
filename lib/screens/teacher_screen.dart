@@ -6,7 +6,7 @@ import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
-import '../utils/auth_service.dart';
+import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
 import 'QRScannerScreen.dart';
