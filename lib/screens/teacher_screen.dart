@@ -9,7 +9,7 @@ import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
-import 'QRScannerScreen.dart';
+import 'qr_scenes/QRScannerScreen.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
