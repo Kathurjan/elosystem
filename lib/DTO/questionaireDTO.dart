@@ -1,33 +1,14 @@
 class Questionaire {
-  List<QuestionDTO> questions = [];
+  List<QuizQuestion> quizQuestion = [];
 
-  Questionaire(this.questions);
+  Questionaire({required this.quizQuestion});
 }
 
-class QuestionDTO {
-  List<AnswerObj> answers = [];
-  String questionText = "";
+class QuizQuestion {
+  final String question;
+  final List<String> answers;
+  final int correctAnswerIndex;
 
-  QuestionDTO(this.answers, this.questionText);
+  QuizQuestion({required this.question, required this.answers, required this.correctAnswerIndex});
 }
 
-class AnswerObj{
-  int Score = 0;
-  String txt = "";
-
-
-  AnswerObj(this.Score, this.txt);
-}
-
-
-
-class fakeObject {
-  late Questionaire questionaire;
-
-  fakeObject(){
-    var _question1 = QuestionDTO([
-      AnswerObj(2, "txt")
-    ], "Test1");
-    this.questionaire = Questionaire([_question1]);
-  }
-}

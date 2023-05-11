@@ -1,5 +1,7 @@
 
+import 'package:elosystem/DTO/questionaireDTO.dart';
 import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
+import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
@@ -13,7 +15,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
-import 'quizScreens/quizScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
+  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: ["answers"], correctAnswerIndex: 0), QuizQuestion(question: "question", answers: ["answers", "lmao", "kek"], correctAnswerIndex: 3), QuizQuestion(question: "question", answers: ["answers", "lmao", "kek"], correctAnswerIndex: 2)]);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: QuizScreen(context),
+                                        child: QuizScreen(questionaire: questionaire),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),

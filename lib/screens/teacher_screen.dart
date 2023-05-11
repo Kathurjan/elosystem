@@ -1,5 +1,6 @@
-import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
+import 'package:elosystem/screens/quizScreens/quizCreation.dart';
+import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
@@ -115,7 +116,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: QuizScreen(context),
+                                        child: QuizCreation(),
                                         slideRight:
                                             true)); // Navigate to the screen after successful sign in
                               }),

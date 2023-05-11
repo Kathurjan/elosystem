@@ -1,90 +1,95 @@
-import 'package:elosystem/DTO/questionaireDTO.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../DTO/questionaireDTO.dart';
 
-import '../../utils/color_utils.dart';
-import 'options.dart';
-import 'result.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen(BuildContext context, {Key? key}) : super(key: key);
+  final Questionaire questionaire;
+
+  QuizScreen({required this.questionaire});
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State {
+class _QuizScreenState extends State<QuizScreen> {
+  int _currentQuestionIndex = 0;
+  int _score = 0;
 
-  var _questionIndex = 0;
-  var _totalResult = 0;
+  void _onAnswerSelected(int selectedAnswerIndex) {
+    if (selectedAnswerIndex == widget.questionaire.quizQuestion[_currentQuestionIndex].correctAnswerIndex) {
+      setState(() {
+        _score++;
+      });
+    }
 
-  final _questionaire = fakeObject().questionaire;
+
+    if (_currentQuestionIndex < widget.questionaire.quizQuestion.length - 1) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) => QuizScreen(questionaire: widget.questionaire),
+          transitionsBuilder: (context, animation1, animation2, child) {
+            return FadeTransition(opacity: animation1, child: child);
+          },
+          transitionDuration: Duration(milliseconds: 500),
+        ),
+      );
+      setState(() {
+        _currentQuestionIndex++;
+      });
+    } else {
+      // Quiz is over, show score
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Quiz finished'),
+          content: Text('Your score is $_score out of ${widget.questionaire.quizQuestion.length}'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
+  }
+
 
   @override
-  void initState() {
-    setState(() {
-      _questionIndex = 0;
-      _totalResult = 0;
-    });
-    super.initState();
-  }
+  Widget build(BuildContext context) {
+    QuizQuestion currentQuestion = widget.questionaire.quizQuestion[_currentQuestionIndex];
 
-  void _resetQuiz() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _questionIndex = 0;
-        _totalResult = 0;
-      });
-    });
-  }
-
-  void _answerQuestion(int score) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _totalResult += score;
-        _questionIndex = _questionIndex + 1;
-      });
-    });
-
-  print(_questionIndex);
-
-  if
-
-  (
-
-  _questionIndex < _questionaire.questions.length) {
-  // ignore: avoid_print
-  print('We have more questions!');
-  } else {
-  // ignore: avoid_print
-  print('No more questions!');
-  }
-}
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            hexStringToColor("fdbb2d"),
-            hexStringToColor("22c1c3"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Quiz'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              currentQuestion.question,
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            ...List.generate(
+              currentQuestion.answers.length,
+                  (index) => RadioListTile(
+                title: Text(currentQuestion.answers[index]),
+                value: index,
+                groupValue: null,
+                onChanged: (value) => {
+                  if(value != null){
+                    _onAnswerSelected(value)
+                  }},
+              ),
+            ),
           ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: _questionIndex < _questionaire.questions.length
-            ? Quiz(
-          answerQuestion: _answerQuestion,
-          questionIndex: _questionIndex,
-          questionaire: _questionaire,
-        ) //Quiz
-            : Result(_totalResult, _resetQuiz),
-      ), //Padding
-    ),
-  );
-}}
+    );
+  }
+}
