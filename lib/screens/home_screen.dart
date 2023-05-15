@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         AuthService authService = AuthService.instance();
                         try {
                           await authService.signOut();
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             SlideAnimationRoute(
                               child: const SignInScreen(),
@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: [
                           RoutingButton("Assignment", context, () async {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
                                 child: const AssignmentScreen(),
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Quiz", context, () async {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
                                 child: const QuizScreen(),
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Score", context, () async {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
                                 child: const ScoreScreen(),
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Stats", context, () async {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
                                 child: const StatsScreen(),

@@ -42,7 +42,7 @@ class _ScoreScreenState extends State {
                     child: Column(
                         children: [
                           ReturnButton("Back", context, () async {
-                            Navigator.push(context, SlideAnimationRoute(
+                            Navigator.pushReplacement(context, SlideAnimationRoute(
                                 child: HomeScreen(),
                                 slideRight: true)); // Navigate to the screen after successful sign in
                           }

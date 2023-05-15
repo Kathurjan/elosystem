@@ -58,7 +58,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                           AuthService authService = AuthService.instance();
                           try {
                             await authService.signOut();
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 SlideAnimationRoute(
                                     child: SignInScreen(), slideRight: true));
@@ -104,7 +104,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                           child: Column(
                             children: [
                               RoutingButton("Assignment", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: AssignmentScreen(),
@@ -113,7 +113,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               }),
                               SizedBox(width: 10.0, height: 10.0),
                               RoutingButton("Quiz", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: QuizScreen(),
@@ -123,7 +123,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               SizedBox(width: 10.0, height: 10.0),
                               // RoutingButton("Score", "path"),
                               RoutingButton("Score", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: ScoreScreen(),
@@ -132,7 +132,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               }),
                               SizedBox(width: 10.0, height: 10.0),
                               RoutingButton("Stats", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: QRScannerScreen(),
