@@ -135,7 +135,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                                 Navigator.push(
                                     context,
                                     SlideAnimationRoute(
-                                        child: QRScannerScreen(),  // Replace StatsScreen() with QRScannerScreen()
+                                        child: QRScannerScreen(),
                                         slideRight: true
                                     )
                                 );

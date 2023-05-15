@@ -34,10 +34,10 @@ class AuthService {
       // Create a new user document in Firestore using the user's uid as the document ID
       await _usersCollection.doc(userCredential.user!.uid).set({
         'email': email,
-        'userType': 'teacher',
+        'userType': 'student',
         // add any additional fields we may want to store for the user
         'userName': userName,
-        'Score': 0,
+        'score': 0,
         'photoUrl': '',
       });
 
@@ -122,6 +122,15 @@ class AuthService {
       }
     }
   }
+
+  getCurrentUserId() {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      return user.uid;
+    }
+    return null;
+  }
+
 
 
 }

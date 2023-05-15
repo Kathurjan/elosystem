@@ -23,7 +23,7 @@ class StudentDataScreen extends StatelessWidget {
             return Column(
               children: [
                 Text('Name: ${data['userName']}'),
-                Text('Score: ${data['Score']}'),
+                Text('Score: ${data['score']}'),
                 // Add more fields as needed
               ],
             );
