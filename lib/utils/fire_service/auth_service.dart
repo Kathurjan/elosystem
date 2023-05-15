@@ -107,15 +107,21 @@ class AuthService {
         // Upload the file to Firebase Storage
         final user = _firebaseAuth.currentUser;
         if (user != null) {
-          final ref = FirebaseStorage.instance.ref().child('profile_images').child(user.uid);
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('profile_images')
+              .child(user.uid);
           await ref.putFile(imageFile);
 
           // Update the user profile
           final photoUrl = await ref.getDownloadURL();
           await user.updatePhotoURL(photoUrl);
+          await _usersCollection
+              .doc(user.uid)
+              .update({'photoUrl': photoUrl});
 
-          // Update the Firestore document
-          await _usersCollection.doc(user.uid).update({'photoUrl': photoUrl});
+          // Refresh the current user's data
+          await user.reload();
         }
       } catch (e) {
         print('Error updating profile picture: $e');
