@@ -59,7 +59,9 @@ Container signInButton(BuildContext context, bool isLogin, Function onTap) {
     ),
   );
 }
-TextField resuableTextFieldNoPassWord(String text, IconData icon, TextEditingController controller) {
+
+TextField resuableTextFieldNoPassWord(
+    String text, IconData icon, TextEditingController controller) {
   return TextField(
     controller: controller,
     obscureText: false,
@@ -92,17 +94,17 @@ Container signOutButton(String text, BuildContext context, Function onTap) {
       onPressed: () {
         onTap();
       },
-        child: Text("$text"),
+      child: Text("$text"),
       style: ButtonStyle(
         textStyle: MaterialStateProperty.all(
           const TextStyle(fontSize: 15),
         ),
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed))
-                return Colors.white.withAlpha(200);
-              return Colors.blue; // Use the component's default.
-            }),
+            (Set<MaterialState> states) {
+          if (states.contains(MaterialState.pressed))
+            return Colors.white.withAlpha(200);
+          return Colors.blue; // Use the component's default.
+        }),
         padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
         minimumSize: MaterialStateProperty.all(const Size(50, 15)),
       ),
@@ -117,7 +119,6 @@ RoutingButton(String text, BuildContext context, Function onTap) {
           const TextStyle(fontSize: 23),
         ),
         padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-
         minimumSize: MaterialStateProperty.all(const Size(200, 20)),
       ),
       onPressed: () {
@@ -133,7 +134,6 @@ ReturnButton(String text, BuildContext context, Function onTap) {
           const TextStyle(fontSize: 15),
         ),
         padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-
         minimumSize: MaterialStateProperty.all(const Size(50, 15)),
       ),
       onPressed: () {

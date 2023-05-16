@@ -10,6 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
+import 'assignmentScreens/subMission_student.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
-                                child: const AssignmentScreen(),
+                                child: const Submission(),
                                 slideRight: true,
                               ),
                             );
