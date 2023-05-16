@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:elosystem/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +50,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                 child: Column(
                   children: [
                     ReturnButton("Back", context, () async {
-                      String userType = await _authService.getUserType(); // Get the user's role from the AuthService
+                      String userType = await _authService.getUserType();
                       if (userType == 'teacher') {
-                        // Check if the user is a teacher
                         Navigator.push(
                           context,
                           SlideAnimationRoute(
@@ -84,7 +85,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                     ),
                     SizedBox(height: 20),
                     Container(
-                      height: 120, // Increased height for description
+                      height: 120,
                       child: resuableTextFieldNoPassWord(
                         "Description",
                         Icons.description,
@@ -94,7 +95,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                     SizedBox(height: 10),
                     Container(
                       height: 40,
-                      width: 200, // Decreased height for days
+                      width: 200,
                       child: resuableTextFieldNoPassWord(
                         "Number of Days",
                         Icons.calendar_today,

@@ -41,16 +41,5 @@ class AssignmentService {
       rethrow;
     }
   }
-  Future<void> submitAssignment(
-      String assignmentId, String studentId, String githubLink) async {
-    try {
-      await _assignmentsCollection.doc(assignmentId).collection('submissions').doc(studentId).set({
-        'githubLink': githubLink,
-        'points': 0, // Initialize points to 0
-      });
-    } catch (e) {
-      rethrow;
-    }
-  }
 
 }

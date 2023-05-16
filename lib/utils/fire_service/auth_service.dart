@@ -11,13 +11,9 @@ class AuthService {
   final CollectionReference _usersCollection =
   FirebaseFirestore.instance.collection('users');
 
-  // Singleton implementation
+  // Singleton stuff
   static final AuthService _instance = AuthService._();
-
-  // Private constructor
   AuthService._();
-
-  // Public method to access the singleton instance
   static AuthService instance() => _instance;
 
 
@@ -104,7 +100,7 @@ class AuthService {
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
       try {
-        // Upload the file to Firebase Storage
+        // Upload the file to Firebase
         final user = _firebaseAuth.currentUser;
         if (user != null) {
           final ref = FirebaseStorage.instance
