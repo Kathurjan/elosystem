@@ -12,7 +12,6 @@ class AssignmentService {
       String name, String description, int numberOfDays) async {
     try {
       DateTime currentDate = DateTime.now();
-      // adding the number of days too the current day
       DateTime submissionDeadline = currentDate.add(Duration(days: numberOfDays));
       bool isSubmissionOver = false;
 
@@ -24,12 +23,15 @@ class AssignmentService {
         'name': name,
         'description': description,
         'numberOfDays': numberOfDays,
+        'currentDate': currentDate,
+        'submissionDeadline': submissionDeadline,
         'isSubmissionOver': isSubmissionOver,
       });
     } catch (e) {
       rethrow;
     }
   }
+
 
   // method used for getting all assignments
   Future<List<Map<String, dynamic>>> getAllAssignments() async {

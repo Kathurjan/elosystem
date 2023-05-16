@@ -23,6 +23,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
 
   Future<void> loadAssignments() async {
     assignments = await _assignmentService.getAllAssignments();
+    // set state is called to rebuild the widget so if something changes it will rebuild it too show case that
     setState(() {});
   }
 
@@ -62,7 +63,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
               child: ExpansionTile(
                 title: Text(
                   assignmentName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -76,7 +77,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                     ListTile(
                       title: Text(
                         submission['studentName'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
