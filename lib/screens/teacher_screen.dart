@@ -6,9 +6,10 @@ import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
-import '../utils/auth_service.dart';
+import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
+import 'qr_scenes/QRScannerScreen.dart';
 
 class TeacherScreen extends StatefulWidget {
   const TeacherScreen({Key? key}) : super(key: key);
@@ -57,7 +58,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                           AuthService authService = AuthService.instance();
                           try {
                             await authService.signOut();
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 SlideAnimationRoute(
                                     child: SignInScreen(), slideRight: true));
@@ -103,7 +104,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                           child: Column(
                             children: [
                               RoutingButton("Assignment", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: AssignmentScreen(),
@@ -112,7 +113,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               }),
                               SizedBox(width: 10.0, height: 10.0),
                               RoutingButton("Quiz", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: QuizScreen(),
@@ -122,7 +123,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                               SizedBox(width: 10.0, height: 10.0),
                               // RoutingButton("Score", "path"),
                               RoutingButton("Score", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
                                         child: ScoreScreen(),
@@ -130,15 +131,16 @@ class _TeacherScreenState extends State<TeacherScreen> {
                                             true)); // Navigate to the screen after successful sign in
                               }),
                               SizedBox(width: 10.0, height: 10.0),
-                              // RoutingButton("Stats", "path"),
                               RoutingButton("Stats", context, () async {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     SlideAnimationRoute(
-                                        child: StatsScreen(),
-                                        slideRight:
-                                            true)); // Navigate to the screen after successful sign in
+                                        child: QRScannerScreen(),
+                                        slideRight: true
+                                    )
+                                );
                               }),
+
                               // RoutingButton("Quiz", "path"),
                             ],
                           )),
