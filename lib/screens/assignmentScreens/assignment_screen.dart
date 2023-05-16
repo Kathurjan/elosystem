@@ -6,17 +6,21 @@ import '../../utils/color_utils.dart';
 import '../../utils/fire_service/auth_service.dart';
 import '../../utils/slideAnimation.dart';
 import '../teacher_screen.dart';
+import 'existingAssignment.dart';
+import '../../utils/fire_service/assignment_service.dart';
 
 class AssignmentScreen extends StatefulWidget {
   const AssignmentScreen({Key? key}) : super(key: key);
 
   @override
   _AssignmentScreenState createState() => _AssignmentScreenState();
+
+
 }
 
 class _AssignmentScreenState extends State<AssignmentScreen> {
-  final AuthService _authService = AuthService.instance(); // Create an instance of the AuthService class
-
+  final AuthService _authService = AuthService.instance(); // instance of auth service
+  final AssignmentService _assignmentService = AssignmentService.instance();// instance of assigmentservice
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController daysController = TextEditingController();
@@ -90,12 +94,55 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                     SizedBox(height: 10),
                     Container(
                       height: 40,
-                      width: 200,// Decreased height for days
+                      width: 200, // Decreased height for days
                       child: resuableTextFieldNoPassWord(
                         "Number of Days",
                         Icons.calendar_today,
                         daysController,
                       ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        String name = nameController.text;
+                        String description = descriptionController.text;
+                        int numberOfDays = int.tryParse(daysController.text) ?? 0;
+
+                        if (name.isNotEmpty && description.isNotEmpty && numberOfDays > 0) {
+                          try {
+                            await _assignmentService.createAssignment(name, description, numberOfDays);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Assignment created successfully')),
+                            );
+                            // Clear the text fields after successful assignment creation
+                            nameController.clear();
+                            descriptionController.clear();
+                            daysController.clear();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Failed to create assignment')),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please fill in all the fields')),
+                          );
+                        }
+                      },
+                      child: Text('Create Assignment'),
+                    ),
+
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExistingAssignment(),
+                          ),
+                        );
+                      },
+                      child: Text('View Previous Assignments'),
                     ),
                   ],
                 ),
