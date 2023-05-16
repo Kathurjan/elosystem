@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
-                                child: const QuizScreen(),
+                                child: const AssignmentScreen(),
                                 slideRight: true,
                               ),
                             );

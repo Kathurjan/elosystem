@@ -2,8 +2,8 @@ import 'package:elosystem/screens/quizScreens/answerDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../DTO/questionaireDTO.dart';
-import '../../utils/auth_service.dart';
 import '../../utils/color_utils.dart';
+import '../../utils/fire_service/auth_service.dart';
 
 class QuizCreation extends StatefulWidget {
   const QuizCreation({Key? key}) : super(key: key);

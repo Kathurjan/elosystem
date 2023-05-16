@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../DTO/questionaireDTO.dart';
 import '../../reusable_widgets/resuable_widgets.dart';
-import '../../utils/auth_service.dart';
 import '../../utils/color_utils.dart';
+import '../../utils/fire_service/auth_service.dart';
 import '../../utils/slideAnimation.dart';
 import '../loginScreens/signin_screen.dart';
 
