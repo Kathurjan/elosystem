@@ -1,19 +1,19 @@
 // auth_service.dart
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final CollectionReference _usersCollection =
   FirebaseFirestore.instance.collection('users');
 
-  // Singleton implementation
+  // Singleton stuff
   static final AuthService _instance = AuthService._();
-
-  // Private constructor
   AuthService._();
-
-  // Public method to access the singleton instance
   static AuthService instance() => _instance;
 
 
@@ -30,10 +30,10 @@ class AuthService {
       // Create a new user document in Firestore using the user's uid as the document ID
       await _usersCollection.doc(userCredential.user!.uid).set({
         'email': email,
-        'userType': 'teacher',
+        'userType': 'student',
         // add any additional fields we may want to store for the user
         'userName': userName,
-        'Score': 0,
+        'score': 0,
         'photoUrl': '',
       });
 
@@ -93,14 +93,46 @@ class AuthService {
 
 }
 
-  Future<void> updateUserPhotoUrl(String uid, String photoUrl) async {
-    try {
-      await _usersCollection.doc(uid).update({'photoUrl': photoUrl});
-    } catch (e) {
-      print('Error updating user photo URL: $e');
-      rethrow;
+  Future<void> updateProfilePicture() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      try {
+        // Upload the file to Firebase
+        final user = _firebaseAuth.currentUser;
+        if (user != null) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('profile_images')
+              .child(user.uid);
+          await ref.putFile(imageFile);
+
+          // Update the user profile
+          final photoUrl = await ref.getDownloadURL();
+          await user.updatePhotoURL(photoUrl);
+          await _usersCollection
+              .doc(user.uid)
+              .update({'photoUrl': photoUrl});
+
+          // Refresh the current user's data
+          await user.reload();
+        }
+      } catch (e) {
+        print('Error updating profile picture: $e');
+      }
     }
   }
+
+  getCurrentUserId() {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      return user.uid;
+    }
+    return null;
+  }
+
 
 
 }
