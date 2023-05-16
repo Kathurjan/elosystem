@@ -89,7 +89,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                     ),
                     SizedBox(height: 10),
                     Container(
-                      height: 40, // Decreased height for days
+                      height: 40,
+                      width: 200,// Decreased height for days
                       child: resuableTextFieldNoPassWord(
                         "Number of Days",
                         Icons.calendar_today,
