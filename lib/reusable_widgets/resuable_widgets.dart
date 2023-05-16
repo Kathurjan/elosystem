@@ -44,7 +44,7 @@ Container signInButton(BuildContext context, bool isLogin, Function onTap) {
             (Set<MaterialState> states) {
           if (states.contains(MaterialState.pressed))
             return Colors.white.withAlpha(200);
-          return Colors.blue; // Use the component's default.
+          return Colors.blue;
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -57,6 +57,32 @@ Container signInButton(BuildContext context, bool isLogin, Function onTap) {
           style: const TextStyle(
               color: Colors.yellow, fontWeight: FontWeight.bold, fontSize: 16)),
     ),
+  );
+}
+TextField resuableTextFieldNoPassWord(String text, IconData icon, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    obscureText: false,
+    enableSuggestions: true,
+    autocorrect: true,
+    cursorColor: Colors.white,
+    style: TextStyle(color: Colors.white.withAlpha(200)),
+    decoration: InputDecoration(
+      prefixIcon: Icon(
+        icon,
+        color: Colors.white60,
+      ),
+      labelText: text,
+      labelStyle: TextStyle(color: Colors.white.withAlpha(200)),
+      filled: true,
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      fillColor: Colors.white.withAlpha(50),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: const BorderSide(width: 0, style: BorderStyle.solid),
+      ),
+    ),
+    keyboardType: TextInputType.emailAddress,
   );
 }
 
