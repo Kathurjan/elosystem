@@ -161,4 +161,25 @@ class AssignmentService {
     }
   }
 
+  // method to give points to a student
+  Future<void> assignPointsToStudent(String studentId, int points) async {
+    try {
+      DocumentReference studentRef = _usersCollection.doc(studentId);
+      DocumentSnapshot studentSnapshot = await studentRef.get();
+
+      if (studentSnapshot.exists) {
+        int currentScore = studentSnapshot.get('score') as int;
+        int updatedScore = currentScore + points;
+
+        await studentRef.update({'score': updatedScore});
+      } else {
+      }
+    } catch (error) {
+      print('Error assigning points to student: $error');
+      throw error;
+    }
+  }
+
+
+
 }
