@@ -22,8 +22,6 @@ class AssignmentService {
       await _assignmentsCollection.add({
         'name': name,
         'description': description,
-        'numberOfDays': numberOfDays,
-        'currentDate': currentDate,
         'submissionDeadline': submissionDeadline,
         'isSubmissionOver': isSubmissionOver,
       });
