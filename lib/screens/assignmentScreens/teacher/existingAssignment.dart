@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
+import 'dart:core';
+
 
 class ExistingAssignment extends StatefulWidget {
   const ExistingAssignment({Key? key}) : super(key: key);
@@ -39,7 +42,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
     } catch (error) {
       print('Error loading submissions for assignment: $error');
       setState(() {
-        submissionsMap[assignmentId] = []; // Clear the submissions for this assignment
+        submissionsMap[assignmentId] = [];
       });
     }
   }
@@ -90,8 +93,8 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                 },
                 children: [
                   if (submissions.isEmpty)
-                    ListTile(
-                      title: const Text(
+                    const ListTile(
+                      title: Text(
                         'No submissions found',
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
@@ -106,16 +109,20 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(
-                        submission['githubLink'],
-                        style: TextStyle(
-                          color: Colors.grey[700],
+                      subtitle: TextButton(
+                        onPressed: () {
+                          launch(Uri.parse(submission['githubLink']).toString()); // Convert the String URL to Uri
+                        },
+                        child: Text(
+                          submission['githubLink'],
+                          style: TextStyle(
+                            color: Colors.blue, // Set the hyperlink text color
+                          ),
                         ),
                       ),
                       trailing: ElevatedButton(
                         onPressed: () {
                           assignPoints(assignmentId!, submission['studentId'], 10);
-                          // Navigate back to the previous screen
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
@@ -131,6 +138,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                         ),
                       ),
                     )),
+
                 ],
               ),
             );
