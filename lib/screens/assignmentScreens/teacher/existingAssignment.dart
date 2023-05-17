@@ -48,7 +48,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
   }
 
   void assignPoints(String assignmentId, String studentId, int points) {
-    // Code to assign points to the student
+    // @todo  need to finish this part so the teacher can add points to the submission
   }
 
   Widget build(BuildContext context) {

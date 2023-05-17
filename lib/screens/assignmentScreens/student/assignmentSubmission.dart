@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import '../../../utils/color_utils.dart';
@@ -73,9 +73,13 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
     String assignmentId = widget.assignmentId;
     String studentId = await _authService.getCurrentUserId() ?? '';
 
+// checking if both assignmentId and studentId are not empty
     if (assignmentId.isNotEmpty && studentId.isNotEmpty) {
       try {
+        // aubmit the assignment using the assignmentService
         await _assignmentService.submitAssignment(assignmentId, studentId, gitRepoLink);
+
+        // show a dialog to indicate successful submission
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -84,6 +88,7 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
             actions: [
               TextButton(
                 onPressed: () {
+                  // Close the dialog and navigate back twice to return to the previous screen
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
@@ -114,7 +119,7 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Incomplete Submission'),
-          content: const Text('Please make sure to select an assignment and provide your student ID.'),
+          content: const Text('Please make sure to select an assignment'),
           actions: [
             TextButton(
               onPressed: () {

@@ -3,8 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AssignmentService {
   final CollectionReference<Map<String, dynamic>> _assignmentsCollection =
   FirebaseFirestore.instance.collection('assignments');
+
   final CollectionReference<Map<String, dynamic>> _usersCollection =
+
   FirebaseFirestore.instance.collection('users');
+
   //singleton stuff
   static final AssignmentService _instance = AssignmentService._();
   AssignmentService._();
@@ -71,6 +74,7 @@ class AssignmentService {
       List<Map<String, dynamic>> assignments = [];
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
+        // Get assignment data from firestore
         Map<String, dynamic> assignmentData = doc.data() as Map<String, dynamic>;
         dynamic submissionDeadline = assignmentData['submissionDeadline'];
 
@@ -79,8 +83,11 @@ class AssignmentService {
           int daysLeft = submissionDeadlineDate.difference(currentDate).inDays;
 
           if (daysLeft >= 0) {
+            // add assignment data to the assignmentData map
             assignmentData['id'] = doc.id;
             assignmentData['daysLeft'] = daysLeft;
+
+            // add the assignmentData to the assignments list
             assignments.add(assignmentData);
           }
         }
@@ -88,9 +95,11 @@ class AssignmentService {
 
       return assignments;
     } catch (e) {
+      // Rethrow the caught exception to preserve the original stack trace
       rethrow;
     }
   }
+
   Future<List<Map<String, dynamic>>> getSubmissionsForAssignment(String assignmentId) async {
     try {
       QuerySnapshot snapshot = await _assignmentsCollection
@@ -137,6 +146,7 @@ class AssignmentService {
       List<Map<String, dynamic>> assignments = [];
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
+        // Get assignment data from firestore
         Map<String, dynamic> assignmentData = doc.data() as Map<String, dynamic>;
         dynamic submissionDeadline = assignmentData['submissionDeadline'];
 
@@ -145,21 +155,28 @@ class AssignmentService {
           int daysLeft = submissionDeadlineDate.difference(currentDate).inDays;
 
           if (daysLeft >= 0) {
+            // Add assignment data to the assignmentData map
             assignmentData['id'] = doc.id;
             assignmentData['daysLeft'] = daysLeft;
+
+            // Get submissions for the current assignment
             List<Map<String, dynamic>> submissions =
             await getSubmissionsForAssignment(doc.id);
             assignmentData['submissions'] = submissions;
+
+            // Add the assignmentData to the assignments list
             assignments.add(assignmentData);
           }
         }
       }
+
       print('Assignments with submissions: $assignments');
       return assignments;
     } catch (e) {
       rethrow;
     }
   }
+
 
   // method to give points to a student
   Future<void> assignPointsToStudent(String studentId, int points) async {

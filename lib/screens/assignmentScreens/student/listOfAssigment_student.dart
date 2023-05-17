@@ -68,10 +68,12 @@ class _ListOfAssignmentStudentState extends State<ListOfAssignmentStudent> {
                   ),
                 ),
                 onTap: () {
+                  // navigate to the AssignmentSubmission screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => AssignmentSubmission(
+                        // passing the assignmentId and assignment data to the assignmentSubmission screen
                         assignmentId: assignmentId,
                         assignment: assignment,
                       ),
