@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnswerDialog extends StatefulWidget {
-  final String initialValue;
+  final String initialKey;
   final Function(String) onSaved;
 
-  const AnswerDialog({Key? key, required this.initialValue, required this.onSaved}) : super(key: key);
+  const AnswerDialog({Key? key, required this.initialKey, required this.onSaved}) : super(key: key);
 
   @override
   _AnswerDialogState createState() => _AnswerDialogState();
@@ -17,7 +17,7 @@ class _AnswerDialogState extends State<AnswerDialog> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialValue);
+    _controller = TextEditingController(text: widget.initialKey);
   }
 
   @override
@@ -30,11 +30,16 @@ class _AnswerDialogState extends State<AnswerDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Edit Answer'),
-      content: TextField(
-        controller: _controller,
-        decoration: InputDecoration(
-          hintText: 'Enter answer...',
-        ),
+      content: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: 'Enter answer...',
+            ),
+          ),
+
+        ],
       ),
       actions: [
         TextButton(

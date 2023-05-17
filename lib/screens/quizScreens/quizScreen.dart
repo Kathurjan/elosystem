@@ -16,7 +16,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _score = 0;
 
   void _onAnswerSelected(int selectedAnswerIndex) {
-    if (selectedAnswerIndex == widget.questionaire.quizQuestion[_currentQuestionIndex].correctAnswerIndex) {
+    if (widget.questionaire.quizQuestion[_currentQuestionIndex].answers[selectedAnswerIndex].values.first == true) {
       setState(() {
         _score++;
       });
@@ -78,7 +78,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ...List.generate(
               currentQuestion.answers.length,
                   (index) => RadioListTile(
-                title: Text(currentQuestion.answers[index]),
+                title: Text(currentQuestion.answers[index].keys.first),
                 value: index,
                 groupValue: null,
                 onChanged: (value) => {

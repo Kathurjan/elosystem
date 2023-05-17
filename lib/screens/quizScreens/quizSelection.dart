@@ -20,16 +20,15 @@ class _QuizSelectionState extends State<QuizSelection> {
   AuthService authService = AuthService.instance();
   Questionaire questionaire = new Questionaire(quizQuestion: [
     QuizQuestion(
-        question: "question", answers: ["answers"], correctAnswerIndex: 0),
+        question: "question", answers: [{"answers": false}]),
     QuizQuestion(
         question: "question",
-        answers: ["answers", "lmao", "kek"],
-        correctAnswerIndex: 3),
+        answers: [{"answers": false}],
+  ),
     QuizQuestion(
         question: "question",
-        answers: ["answers", "lmao", "kek"],
-        correctAnswerIndex: 2)
-  ]);
+        answers: [{"answers": false}]
+    )]);
 
   @override
   Widget build(BuildContext context) {

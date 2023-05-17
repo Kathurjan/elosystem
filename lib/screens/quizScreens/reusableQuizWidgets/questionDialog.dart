@@ -24,7 +24,7 @@ class _QuestionDialog extends State<QuestionDialog> {
             itemCount: widget.quizQuestion.answers.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                title: Text(widget.quizQuestion.answers[index]),
+                title: Text(widget.quizQuestion.answers[index].keys.first),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {

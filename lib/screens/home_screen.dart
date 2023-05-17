@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: ["answers"], correctAnswerIndex: 0), QuizQuestion(question: "question", answers: ["answers", "lmao", "kek"], correctAnswerIndex: 3), QuizQuestion(question: "question", answers: ["answers", "lmao", "kek"], correctAnswerIndex: 2)]);
+  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}])]);
 
   @override
   Widget build(BuildContext context) {
