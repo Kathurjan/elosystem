@@ -10,12 +10,12 @@ class StudentDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Fetch student data from Firestore based on studentId
     return Scaffold(
-      appBar: AppBar(title: Text('Student Data')),
+      appBar: AppBar(title: const Text('Student Data')),
       body: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(studentId).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -24,7 +24,6 @@ class StudentDataScreen extends StatelessWidget {
               children: [
                 Text('Name: ${data['userName']}'),
                 Text('Score: ${data['score']}'),
-                // Add more fields as needed
               ],
             );
           }

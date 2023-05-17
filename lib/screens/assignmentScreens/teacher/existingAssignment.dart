@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../utils/color_utils.dart';
-import '../../utils/fire_service/assignment_service.dart';
+import '../../../utils/color_utils.dart';
+import '../../../utils/fire_service/assignment_service.dart';
 
 class ExistingAssignment extends StatefulWidget {
   const ExistingAssignment({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
   final AssignmentService _assignmentService = AssignmentService.instance();
 
   List<Map<String, dynamic>> assignments = [];
-  List<Map<String, dynamic>> submissions = [];
+  Map<String, List<Map<String, dynamic>>> submissionsMap = {};
 
   @override
   void initState() {
@@ -22,22 +22,37 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
   }
 
   Future<void> loadAssignments() async {
-    assignments = await _assignmentService.getAllAssignments();
-    // set state is called to rebuild the widget so if something changes it will rebuild it too show case that
+    assignments = await _assignmentService.getAllAssignmentsWithSubmissions();
+    for (final assignment in assignments) {
+      final assignmentId = assignment['id'];
+      await loadSubmissions(assignmentId);
+    }
     setState(() {});
   }
 
   Future<void> loadSubmissions(String assignmentId) async {
-    submissions = await _assignmentService.getSubmissionsForAssignment(assignmentId);
-    setState(() {});
+    try {
+      final submissions = await _assignmentService.getSubmissionsForAssignment(assignmentId);
+      setState(() {
+        submissionsMap[assignmentId] = submissions;
+      });
+    } catch (error) {
+      print('Error loading submissions for assignment: $error');
+      setState(() {
+        submissionsMap[assignmentId] = []; // Clear the submissions for this assignment
+      });
+    }
   }
 
-  @override
+  void assignPoints(String assignmentId, String studentId, int points) {
+    // Code to assign points to the student
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assignments'),
-        backgroundColor: hexStringToColor("fdbb2d"), // Set the app bar color
+        backgroundColor: hexStringToColor("fdbb2d"),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -56,6 +71,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
             final assignment = assignments[index];
             final assignmentId = assignment['id'];
             final assignmentName = assignment['name'];
+            final submissions = submissionsMap[assignmentId] ?? [];
 
             return Card(
               margin: const EdgeInsets.all(10.0),
@@ -68,15 +84,24 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                   ),
                 ),
                 onExpansionChanged: (expanded) {
-                  if (expanded) {
+                  if (expanded && assignmentId != null) {
                     loadSubmissions(assignmentId);
                   }
                 },
                 children: [
-                  for (final submission in submissions)
+                  if (submissions.isEmpty)
                     ListTile(
+                      title: const Text(
+                        'No submissions found',
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    )
+                  else
+                    ...submissions.map((submission) => ListTile(
                       title: Text(
-                        submission['studentName'],
+                        submission['studentName'] ?? 'Unknown Student',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -89,9 +114,9 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                       ),
                       trailing: ElevatedButton(
                         onPressed: () {
-                          // Assign points to the submission
-                          // Call a method in the AssignmentService to assign points
-                          // Pass the assignmentId, studentId, and points as parameters
+                          assignPoints(assignmentId!, submission['studentId'], 10);
+                          // Navigate back to the previous screen
+                          Navigator.pop(context);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -105,7 +130,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                           ),
                         ),
                       ),
-                    ),
+                    )),
                 ],
               ),
             );
@@ -114,4 +139,6 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
       ),
     );
   }
+
+
 }
