@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AssignmentService {
-  final CollectionReference _assignmentsCollection =
+  final CollectionReference<Map<String, dynamic>> _assignmentsCollection =
   FirebaseFirestore.instance.collection('assignments');
+
+  final CollectionReference<Map<String, dynamic>> _usersCollection =
+
+  FirebaseFirestore.instance.collection('users');
+
   //singleton stuff
   static final AssignmentService _instance = AssignmentService._();
   AssignmentService._();
@@ -22,7 +27,7 @@ class AssignmentService {
       await _assignmentsCollection.add({
         'name': name,
         'description': description,
-        'numberOfDays': numberOfDays,
+        'submissionDeadline': submissionDeadline,
         'isSubmissionOver': isSubmissionOver,
       });
     } catch (e) {
@@ -31,6 +36,7 @@ class AssignmentService {
   }
 
 
+  // method used for getting all assignments
   Future<List<Map<String, dynamic>>> getAllAssignments() async {
     try {
       QuerySnapshot snapshot = await _assignmentsCollection.get();
@@ -41,5 +47,156 @@ class AssignmentService {
       rethrow;
     }
   }
+
+  // for studets to sumbit an assigment
+  Future<void> submitAssignment(String assignmentId, String studentId, String githubLink) async {
+    try {
+      await _assignmentsCollection
+          .doc(assignmentId)
+          .collection('submissions')
+          .doc(studentId)
+          .set({
+        'githubLink': githubLink,
+      });
+      print('Assignment submitted successfully.');
+    } catch (error) {
+      print('Error submitting assignment: $error');
+      throw error;
+    }
+  }
+
+  // get all assignments for the students.
+  Future<List<Map<String, dynamic>>> getAvailableAssignments() async {
+    try {
+      DateTime currentDate = DateTime.now();
+
+      QuerySnapshot snapshot = await _assignmentsCollection.get();
+      List<Map<String, dynamic>> assignments = [];
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        // Get assignment data from firestore
+        Map<String, dynamic> assignmentData = doc.data() as Map<String, dynamic>;
+        dynamic submissionDeadline = assignmentData['submissionDeadline'];
+
+        if (submissionDeadline != null) {
+          DateTime submissionDeadlineDate = submissionDeadline.toDate();
+          int daysLeft = submissionDeadlineDate.difference(currentDate).inDays;
+
+          if (daysLeft >= 0) {
+            // add assignment data to the assignmentData map
+            assignmentData['id'] = doc.id;
+            assignmentData['daysLeft'] = daysLeft;
+
+            // add the assignmentData to the assignments list
+            assignments.add(assignmentData);
+          }
+        }
+      }
+
+      return assignments;
+    } catch (e) {
+      // Rethrow the caught exception to preserve the original stack trace
+      rethrow;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getSubmissionsForAssignment(String assignmentId) async {
+    try {
+      QuerySnapshot snapshot = await _assignmentsCollection
+          .doc(assignmentId)
+          .collection('submissions')
+          .get();
+
+      List<Map<String, dynamic>> submissions = [];
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        String studentId = doc.id;
+        Map<String, dynamic> submissionData = doc.data() as Map<String, dynamic>;
+
+        // Fetch the student's name from the user database or student model
+        DocumentSnapshot studentSnapshot = await _usersCollection.doc(studentId).get();
+        print('Student snapshot data: ${studentSnapshot.data()}');
+
+        if (studentSnapshot.exists) {
+          String studentName = studentSnapshot.get('userName') as String;
+          print('Student name: $studentName');
+
+          // Include the student's name in the submission data
+          submissionData['studentName'] = studentName;
+
+          submissions.add(submissionData);
+        } else {
+          print('Student snapshot does not exist');
+        }
+      }
+
+      return submissions;
+    } catch (error) {
+      print('Error retrieving submissions for assignment: $error');
+      throw error;
+    }
+  }
+
+
+
+
+  Future<List<Map<String, dynamic>>> getAllAssignmentsWithSubmissions() async {
+    try {
+      DateTime currentDate = DateTime.now();
+      QuerySnapshot snapshot = await _assignmentsCollection.get();
+      List<Map<String, dynamic>> assignments = [];
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        // Get assignment data from firestore
+        Map<String, dynamic> assignmentData = doc.data() as Map<String, dynamic>;
+        dynamic submissionDeadline = assignmentData['submissionDeadline'];
+
+        if (submissionDeadline != null) {
+          DateTime submissionDeadlineDate = submissionDeadline.toDate();
+          int daysLeft = submissionDeadlineDate.difference(currentDate).inDays;
+
+          if (daysLeft >= 0) {
+            // Add assignment data to the assignmentData map
+            assignmentData['id'] = doc.id;
+            assignmentData['daysLeft'] = daysLeft;
+
+            // Get submissions for the current assignment
+            List<Map<String, dynamic>> submissions =
+            await getSubmissionsForAssignment(doc.id);
+            assignmentData['submissions'] = submissions;
+
+            // Add the assignmentData to the assignments list
+            assignments.add(assignmentData);
+          }
+        }
+      }
+
+      print('Assignments with submissions: $assignments');
+      return assignments;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
+  // method to give points to a student
+  Future<void> assignPointsToStudent(String studentId, int points) async {
+    try {
+      DocumentReference studentRef = _usersCollection.doc(studentId);
+      DocumentSnapshot studentSnapshot = await studentRef.get();
+
+      if (studentSnapshot.exists) {
+        int currentScore = studentSnapshot.get('score') as int;
+        int updatedScore = currentScore + points;
+
+        await studentRef.update({'score': updatedScore});
+      } else {
+      }
+    } catch (error) {
+      print('Error assigning points to student: $error');
+      throw error;
+    }
+  }
+
+
 
 }

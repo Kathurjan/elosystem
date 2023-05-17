@@ -1,34 +1,30 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:elosystem/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../reusable_widgets/resuable_widgets.dart';
-import '../../utils/color_utils.dart';
-import '../../utils/fire_service/auth_service.dart';
-import '../../utils/slideAnimation.dart';
-import '../teacher_screen.dart';
+import '../../../reusable_widgets/resuable_widgets.dart';
+import '../../../utils/color_utils.dart';
 import 'existingAssignment.dart';
-import '../../utils/fire_service/assignment_service.dart';
+import '../../../utils/fire_service/assignment_service.dart';
 
 class AssignmentScreen extends StatefulWidget {
   const AssignmentScreen({Key? key}) : super(key: key);
-
   @override
   _AssignmentScreenState createState() => _AssignmentScreenState();
-
-
 }
 
 class _AssignmentScreenState extends State<AssignmentScreen> {
-  final AuthService _authService = AuthService.instance(); // instance of auth service
-  final AssignmentService _assignmentService = AssignmentService.instance();// instance of assigmentservice
+  final AssignmentService _assignmentService = AssignmentService.instance();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController daysController = TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // this part also handles the return of the scene, which is a build in back button essentially
+      appBar: AppBar(
+        title: const Text('Assignments'),
+        backgroundColor: hexStringToColor("fdbb2d"),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -45,34 +41,6 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           child: Stack(
             children: <Widget>[
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.05,
-                left: 0,
-                child: Column(
-                  children: [
-                    ReturnButton("Back", context, () async {
-                      String userType = await _authService.getUserType();
-                      if (userType == 'teacher') {
-                        Navigator.push(
-                          context,
-                          SlideAnimationRoute(
-                            child: TeacherScreen(),
-                            slideRight: true,
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          SlideAnimationRoute(
-                            child: HomeScreen(),
-                            slideRight: true,
-                          ),
-                        );
-                      }
-                    }),
-                  ],
-                ),
-              ),
-              Positioned(
                 top: MediaQuery.of(context).size.height * 0.2,
                 left: 0,
                 right: 0,
@@ -83,8 +51,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                       Icons.assignment,
                       nameController,
                     ),
-                    SizedBox(height: 20),
-                    Container(
+                    const SizedBox(height: 20),
+                    SizedBox(
                       height: 120,
                       child: resuableTextFieldNoPassWord(
                         "Description",
@@ -92,8 +60,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                         descriptionController,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Container(
+                    const SizedBox(height: 10),
+                    SizedBox(
                       height: 40,
                       width: 200,
                       child: resuableTextFieldNoPassWord(
@@ -102,7 +70,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                         daysController,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
                         String name = nameController.text;
@@ -113,37 +81,36 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           try {
                             await _assignmentService.createAssignment(name, description, numberOfDays);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Assignment created successfully')),
+                              const SnackBar(content: Text('Assignment created successfully')),
                             );
-                            // Clear the text fields after successful assignment creation
+                            // clearing the text fields after creation.
                             nameController.clear();
                             descriptionController.clear();
                             daysController.clear();
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed to create assignment')),
+                              const SnackBar(content: Text('Failed to create assignment')),
                             );
                           }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please fill in all the fields')),
+                            const SnackBar(content: Text('Please fill in all the fields')),
                           );
                         }
                       },
-                      child: Text('Create Assignment'),
+                      child: const Text('Create Assignment'),
                     ),
-
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ExistingAssignment(),
+                            builder: (context) => const ExistingAssignment(),
                           ),
                         );
                       },
-                      child: Text('View Previous Assignments'),
+                      child: const Text('View Previous Assignments'),
                     ),
                   ],
                 ),

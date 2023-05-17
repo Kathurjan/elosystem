@@ -1,15 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
-import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
+import 'assignmentScreens/student/listOfAssigment_student.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -136,10 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: [
                           RoutingButton("Assignment", context, () async {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               SlideAnimationRoute(
-                                child: const AssignmentScreen(),
+                                child: const ListOfAssignmentStudent(),
                                 slideRight: true,
                               ),
                             );
