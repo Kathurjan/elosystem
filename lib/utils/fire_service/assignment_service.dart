@@ -58,7 +58,7 @@ class AssignmentService {
           .set({
         'githubLink': githubLink,
         // field to track if points have been assigned.
-        'scoreAssigned': false,
+        'pointsAssigned': false,
       });
       print('Assignment submitted successfully.');
     } catch (error) {
