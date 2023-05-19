@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/color_utils.dart';
@@ -113,14 +114,18 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                           ),
                           subtitle: TextButton(
                             onPressed: () {
-                              launch(Uri.parse(submission['githubLink'])
-                                  .toString()); // Convert the String URL to Uri
+                              FlutterClipboard.copy(submission['githubLink'])
+                                  .then((result) {
+                                final snackBar = SnackBar(
+                                  content: Text('GitHub link copied to clipboard'),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                              });
                             },
                             child: Text(
                               submission['githubLink'],
                               style: const TextStyle(
-                                color: Colors
-                                    .blue, // Set the hyperlink text color
+                                color: Colors.blue, // Set the hyperlink text color
                               ),
                             ),
                           ),
