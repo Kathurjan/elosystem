@@ -4,7 +4,6 @@ import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
 import 'dart:core';
 
-
 class ExistingAssignment extends StatefulWidget {
   const ExistingAssignment({Key? key}) : super(key: key);
 
@@ -17,6 +16,8 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
 
   List<Map<String, dynamic>> assignments = [];
   Map<String, List<Map<String, dynamic>>> submissionsMap = {};
+
+  TextEditingController pointsFieldController = TextEditingController(); // New TextField controller
 
   @override
   void initState() {
@@ -35,7 +36,8 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
 
   Future<void> loadSubmissions(String assignmentId) async {
     try {
-      final submissions = await _assignmentService.getSubmissionsForAssignment(assignmentId);
+      final submissions = await _assignmentService.getSubmissionsForAssignment(
+          assignmentId);
       setState(() {
         submissionsMap[assignmentId] = submissions;
       });
@@ -48,7 +50,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
   }
 
   void assignPoints(String assignmentId, String studentId, int points) {
-    // @todo  need to finish this part so the teacher can add points to the submission
+// @todo need to finish this part so the teacher can add points to the submission
   }
 
   Widget build(BuildContext context) {
@@ -75,7 +77,6 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
             final assignmentId = assignment['id'];
             final assignmentName = assignment['name'];
             final submissions = submissionsMap[assignmentId] ?? [];
-
             return Card(
               margin: const EdgeInsets.all(10.0),
               elevation: 2.0,
@@ -102,43 +103,53 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                       ),
                     )
                   else
-                    ...submissions.map((submission) => ListTile(
-                      title: Text(
-                        submission['studentName'] ?? 'Unknown Student',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: TextButton(
-                        onPressed: () {
-                          launch(Uri.parse(submission['githubLink']).toString()); // Convert the String URL to Uri
-                        },
-                        child: Text(
-                          submission['githubLink'],
-                          style: TextStyle(
-                            color: Colors.blue, // Set the hyperlink text color
+                    ...submissions.map((submission) =>
+                        ListTile(
+                          title: Text(
+                            submission['studentName'] ?? 'Unknown Student',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ),
-                      trailing: ElevatedButton(
-                        onPressed: () {
-                          assignPoints(assignmentId!, submission['studentId'], 10);
-                          Navigator.pop(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            hexStringToColor("fdbb2d"),
+                          subtitle: TextButton(
+                            onPressed: () {
+                              launch(Uri.parse(submission['githubLink'])
+                                  .toString()); // Convert the String URL to Uri
+                            },
+                            child: Text(
+                              submission['githubLink'],
+                              style: const TextStyle(
+                                color: Colors
+                                    .blue, // Set the hyperlink text color
+                              ),
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Assign Points',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              assignPoints(
+                                  assignmentId!, submission['studentId'], 10);
+                              Navigator.pop(context);
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                hexStringToColor("fdbb2d"),
+                              ),
+                            ),
+                            child: const Text(
+                              'Assign Points',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )),
+                        )),
 
+                  TextField(
+                    controller: pointsFieldController,
+                    decoration: const InputDecoration(
+                      labelText: 'How many points',
+                    ),
+                  ),
                 ],
               ),
             );
@@ -147,6 +158,4 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
       ),
     );
   }
-
-
 }
