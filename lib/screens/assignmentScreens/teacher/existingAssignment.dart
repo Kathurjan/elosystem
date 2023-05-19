@@ -1,9 +1,9 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
 import 'dart:core';
-
 
 class ExistingAssignment extends StatefulWidget {
   const ExistingAssignment({Key? key}) : super(key: key);
@@ -17,6 +17,8 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
 
   List<Map<String, dynamic>> assignments = [];
   Map<String, List<Map<String, dynamic>>> submissionsMap = {};
+
+  TextEditingController pointsFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -35,7 +37,8 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
 
   Future<void> loadSubmissions(String assignmentId) async {
     try {
-      final submissions = await _assignmentService.getSubmissionsForAssignment(assignmentId);
+      final submissions =
+      await _assignmentService.getSubmissionsForAssignment(assignmentId);
       setState(() {
         submissionsMap[assignmentId] = submissions;
       });
@@ -47,8 +50,17 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
     }
   }
 
-  void assignPoints(String assignmentId, String studentId, int points) {
-    // @todo  need to finish this part so the teacher can add points to the submission
+  Future<void> assignPoints(
+      String assignmentId, String studentId, int points) async {
+    try {
+      await _assignmentService.assignPointsToStudent(studentId, points);
+      // used for some logic so we can disable the button or change the color of the students name
+      await _assignmentService.updatePointsAssignedStatus(
+          assignmentId, studentId, true);
+      pointsFieldController.clear();
+    } catch (error) {
+      print('Error assigning points: $error');
+    }
   }
 
   Widget build(BuildContext context) {
@@ -71,11 +83,12 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
         child: ListView.builder(
           itemCount: assignments.length,
           itemBuilder: (context, index) {
+            // Fetch the assignment Map object at the index from the list of assignments
             final assignment = assignments[index];
+            // Retrieve the 'id' from the fetched assignment
             final assignmentId = assignment['id'];
             final assignmentName = assignment['name'];
             final submissions = submissionsMap[assignmentId] ?? [];
-
             return Card(
               margin: const EdgeInsets.all(10.0),
               elevation: 2.0,
@@ -88,6 +101,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                 ),
                 onExpansionChanged: (expanded) {
                   if (expanded && assignmentId != null) {
+                    // Load submissions when the tile is expanded
                     loadSubmissions(assignmentId);
                   }
                 },
@@ -105,25 +119,44 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                     ...submissions.map((submission) => ListTile(
                       title: Text(
                         submission['studentName'] ?? 'Unknown Student',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          // Set the color based on whether points are assigned or not
+                          color: submission['pointsAssigned'] == true ? Colors.green : Colors.red,
                         ),
                       ),
                       subtitle: TextButton(
                         onPressed: () {
-                          launch(Uri.parse(submission['githubLink']).toString()); // Convert the String URL to Uri
+                          FlutterClipboard.copy(submission['githubLink']).then((result) {
+                            final snackBar = SnackBar(
+                              content: Text('GitHub link copied to clipboard'),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          });
                         },
                         child: Text(
                           submission['githubLink'],
-                          style: TextStyle(
-                            color: Colors.blue, // Set the hyperlink text color
+                          style: const TextStyle(
+                            color: Colors.black,
                           ),
                         ),
                       ),
                       trailing: ElevatedButton(
-                        onPressed: () {
-                          assignPoints(assignmentId!, submission['studentId'], 10);
-                          Navigator.pop(context);
+                        onPressed: submission['pointsAssigned'] == true ? null : () async {
+                          var githubLink = submission['githubLink'];
+                          String? studentId = await _assignmentService.getStudentIdBySubmission(assignmentId, githubLink);
+                          if (studentId != null) {
+                            var points = int.tryParse(pointsFieldController.text);
+                            if (points != null) {
+                              // Assign points to the student
+                              assignPoints(assignmentId, studentId, points);
+                              pointsFieldController.clear();
+                            } else {
+                              print('Invalid input in points field');
+                            }
+                          } else {
+                            print('Failed to get student ID');
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -139,6 +172,12 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
                       ),
                     )),
 
+                  TextField(
+                    controller: pointsFieldController,
+                    decoration: const InputDecoration(
+                      labelText: 'How many points',
+                    ),
+                  ),
                 ],
               ),
             );
@@ -147,6 +186,4 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
       ),
     );
   }
-
-
 }

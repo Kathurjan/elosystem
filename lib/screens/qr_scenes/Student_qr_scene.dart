@@ -36,10 +36,17 @@ class StudentDataScreen extends StatelessWidget {
                   title: const Text('Score', style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(data['score'].toString()),
                 ),
+                TextField(
+                  controller: _pointsController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Points',
+                  ),
+                ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     int points = int.tryParse(_pointsController.text) ?? 0;
-                    AssignmentService.instance().assignPointsToStudent(studentId, points);
+                    await AssignmentService.instance().assignPointsToStudent(studentId, points);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(hexStringToColor("fdbb2d")),

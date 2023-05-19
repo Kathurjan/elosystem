@@ -57,6 +57,8 @@ class AssignmentService {
           .doc(studentId)
           .set({
         'githubLink': githubLink,
+        // field to track if points have been assigned.
+        'pointsAssigned': false,
       });
       print('Assignment submitted successfully.');
     } catch (error) {
@@ -95,11 +97,10 @@ class AssignmentService {
 
       return assignments;
     } catch (e) {
-      // Rethrow the caught exception to preserve the original stack trace
       rethrow;
     }
   }
-
+// getting the submissions for the specific assignments
   Future<List<Map<String, dynamic>>> getSubmissionsForAssignment(String assignmentId) async {
     try {
       QuerySnapshot snapshot = await _assignmentsCollection
@@ -136,9 +137,7 @@ class AssignmentService {
     }
   }
 
-
-
-
+  // getting all the assigments, if they have submisisons
   Future<List<Map<String, dynamic>>> getAllAssignmentsWithSubmissions() async {
     try {
       DateTime currentDate = DateTime.now();
@@ -177,6 +176,27 @@ class AssignmentService {
     }
   }
 
+  // getting the students id by the submissions
+  Future<String?> getStudentIdBySubmission(String assignmentId, String githubLink) async {
+    try {
+      QuerySnapshot snapshot = await _assignmentsCollection
+          .doc(assignmentId)
+          .collection('submissions')
+          .where('githubLink', isEqualTo: githubLink)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        String studentId = snapshot.docs.first.id;
+        return studentId;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      print('Error retrieving student ID by submission: $error');
+      throw error;
+    }
+  }
 
   // method to give points to a student
   Future<void> assignPointsToStudent(String studentId, int points) async {
@@ -196,7 +216,20 @@ class AssignmentService {
       throw error;
     }
   }
-
-
+  // method for updating the status of points assigned.
+  Future<void> updatePointsAssignedStatus(String assignmentId, String studentId, bool status) async {
+    try {
+      await _assignmentsCollection
+          .doc(assignmentId)
+          .collection('submissions')
+          .doc(studentId)
+          .update({
+        'pointsAssigned': status,
+      });
+    } catch (error) {
+      print('Error updating points assigned status: $error');
+      throw error;
+    }
+  }
 
 }
