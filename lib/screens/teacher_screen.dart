@@ -1,3 +1,7 @@
+import 'package:elosystem/screens/quizScreens/quizCreation.dart';
+import 'package:elosystem/screens/quizScreens/quizScreen.dart';
+import 'package:elosystem/screens/statsScreens/stats_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import '../utils/fire_service/auth_service.dart';
@@ -98,6 +102,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                         ))
                             .toList(),
                       ),
+
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.55,

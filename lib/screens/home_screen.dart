@@ -1,11 +1,20 @@
+import 'package:elosystem/DTO/questionaireDTO.dart';
+import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
+import 'package:elosystem/screens/quizScreens/quizScreen.dart';
+import 'package:elosystem/screens/scoreScreens/score_screen.dart';
+import 'package:elosystem/screens/loginScreens/signin_screen.dart';
+import 'package:elosystem/screens/statsScreens/stats_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
@@ -21,6 +30,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
+  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}])]);
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
-                                child: const QuizScreen(),
+                                child: const AssignmentScreen(),
                                 slideRight: true,
                               ),
                             );
