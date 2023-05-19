@@ -54,6 +54,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
       String assignmentId, String studentId, int points) async {
     try {
       await _assignmentService.assignPointsToStudent(studentId, points);
+      // used for some logic so we can disable the button or change the color of the students name
       await _assignmentService.updatePointsAssignedStatus(
           assignmentId, studentId, true);
       pointsFieldController.clear();
@@ -66,14 +67,14 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assignments'),
-        backgroundColor: hexStringToColor("fdbb2d"), // Set the app bar background color
+        backgroundColor: hexStringToColor("fdbb2d"),
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              hexStringToColor("fdbb2d"), // Set the start color of the gradient
-              hexStringToColor("22c1c3"), // Set the end color of the gradient
+              hexStringToColor("fdbb2d"),
+              hexStringToColor("22c1c3"),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

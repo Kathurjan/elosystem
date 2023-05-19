@@ -57,7 +57,8 @@ class AssignmentService {
           .doc(studentId)
           .set({
         'githubLink': githubLink,
-        'scoreAssigned': false, // New field to track if points have been assigned
+        // field to track if points have been assigned.
+        'scoreAssigned': false,
       });
       print('Assignment submitted successfully.');
     } catch (error) {
@@ -96,7 +97,6 @@ class AssignmentService {
 
       return assignments;
     } catch (e) {
-      // Rethrow the caught exception to preserve the original stack trace
       rethrow;
     }
   }
@@ -216,6 +216,7 @@ class AssignmentService {
       throw error;
     }
   }
+  // method for updating the status of points assigned.
   Future<void> updatePointsAssignedStatus(String assignmentId, String studentId, bool status) async {
     try {
       await _assignmentsCollection
