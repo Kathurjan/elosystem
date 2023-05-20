@@ -143,18 +143,3 @@ ReturnButton(String text, BuildContext context, Function onTap) {
       },
       child: Text("$text"));
 }
-
-stylingContainer() {
-  return Container(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          hexStringToColor("fdbb2d"),
-          hexStringToColor("22c1c3"),
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ),
-    ),
-  );
-}
