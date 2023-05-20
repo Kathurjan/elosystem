@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../DTO/questionaireDTO.dart';
+import '../../utils/fire_service/questionairService.dart';
 
 
 class QuizScreen extends StatefulWidget {
-  final Questionaire questionaire;
+  final Questionnaire questionnaire;
 
-  QuizScreen({required this.questionaire});
+  QuizScreen({required this.questionnaire});
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
@@ -15,18 +16,19 @@ class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestionIndex = 0;
   int _score = 0;
 
+
   void _onAnswerSelected(int selectedAnswerIndex) {
-    if (widget.questionaire.quizQuestion[_currentQuestionIndex].answers[selectedAnswerIndex].values.first == true) {
+    if (widget.questionnaire.quizQuestion[_currentQuestionIndex].answers[selectedAnswerIndex].values.first == true) {
       setState(() {
         _score++;
       });
     }
 
 
-    if (_currentQuestionIndex < widget.questionaire.quizQuestion.length - 1) {
+    if (_currentQuestionIndex < widget.questionnaire.quizQuestion.length - 1) {
       Navigator.of(context).push(
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => QuizScreen(questionaire: widget.questionaire),
+          pageBuilder: (context, animation1, animation2) => QuizScreen(questionnaire: widget.questionnaire),
           transitionsBuilder: (context, animation1, animation2, child) {
             return FadeTransition(opacity: animation1, child: child);
           },
@@ -42,7 +44,7 @@ class _QuizScreenState extends State<QuizScreen> {
         context: context,
         builder: (_) => AlertDialog(
           title: Text('Quiz finished'),
-          content: Text('Your score is $_score out of ${widget.questionaire.quizQuestion.length}'),
+          content: Text('Your score is $_score out of ${widget.questionnaire.quizQuestion.length}'),
           actions: [
             TextButton(
               child: Text('OK'),
@@ -59,7 +61,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    QuizQuestion currentQuestion = widget.questionaire.quizQuestion[_currentQuestionIndex];
+    QuizQuestion currentQuestion = widget.questionnaire.quizQuestion[_currentQuestionIndex];
 
     return Scaffold(
       appBar: AppBar(

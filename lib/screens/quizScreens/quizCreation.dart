@@ -17,7 +17,7 @@ class QuizCreation extends StatefulWidget {
 
 class _QuizCreationState extends State<QuizCreation> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: []);
+  Questionnaire questionaire = Questionnaire(quizQuestion: [], name: "", uId: "", weeklyQuiz: false, dailyQuiz: false);
   List<Map<String, bool>> _answers = [];
   bool _dropdownValue = false;
   bool editMode = false;
@@ -75,6 +75,8 @@ class _QuizCreationState extends State<QuizCreation> {
           });
     });
   }
+
+
 
   void questionCreation(BuildContext context){ // The method for creating questions based on the answer list
     num correctAnswers = 0;
@@ -272,6 +274,19 @@ class _QuizCreationState extends State<QuizCreation> {
                                   },
                                   child: Text(
                                     "Finish the question",
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    questionCreation(context);
+                                  },
+                                  child: Text(
+                                    "Finish the questionaire",
                                     style: const TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold,

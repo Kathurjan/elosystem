@@ -6,6 +6,7 @@ import '../../DTO/questionaireDTO.dart';
 import '../../reusable_widgets/resuable_widgets.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/fire_service/auth_service.dart';
+import '../../utils/fire_service/questionairService.dart';
 import '../../utils/slideAnimation.dart';
 import '../loginScreens/signin_screen.dart';
 
@@ -18,20 +19,43 @@ class QuizSelection extends StatefulWidget {
 
 class _QuizSelectionState extends State<QuizSelection> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: [
-    QuizQuestion(
-        question: "question", answers: [{"answers": false}]),
-    QuizQuestion(
-        question: "question",
-        answers: [{"answers": false}],
-  ),
-    QuizQuestion(
-        question: "question",
-        answers: [{"answers": false}]
-    )]);
+
+  Map<String, String>? dailyQuiz;
+  Map<String, String>? weeklyQuiz;
+  Questionnaire? questionnaire;
+
+  Future<void> fetchDailyQuiz() async {
+    dailyQuiz = await QuestionnaireService().getWeeklyOrDaily("daily");
+    weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weekly");
+  }
+
+  Future<void> fetchSelectedQuestionaire(String uId) async {
+    questionnaire = await QuestionnaireService().getQuestionaire(uId);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDailyQuiz();
+  }
+
+  void navigateToQuizScreen(String uId) {
+    fetchSelectedQuestionaire(uId);
+    if (questionnaire != null) {
+      Navigator.push(
+        context,
+        SlideAnimationRoute(
+          child: QuizScreen(questionnaire: questionnaire!),
+          slideRight: true,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    bool isDailyQuizAvailable = dailyQuiz != null;
+    bool isWeeklyQuizAvailable = weeklyQuiz != null;
     return Scaffold(
         body: Container(
             decoration: BoxDecoration(
@@ -85,25 +109,29 @@ class _QuizSelectionState extends State<QuizSelection> {
                           right: 0,
                           child: Column(
                             children: [
-                              RoutingButton("Daily Quiz", context, () async {
-                                Navigator.push(
+                              IgnorePointer(
+                                ignoring: !isDailyQuizAvailable,
+                                child: RoutingButton(
+                                    "Daily Quiz: ${dailyQuiz != null
+                                            ? dailyQuiz!.values.first
+                                            : 'Quiz not available'}",
                                     context,
-                                    SlideAnimationRoute(
-                                        child: QuizScreen(
-                                            questionaire: questionaire),
-                                        slideRight:
-                                            true)); // Navigate to the screen after successful sign in
-                              }),
+                                    () => navigateToQuizScreen(
+                                        dailyQuiz!.keys.first)),
+                              ),
                               const SizedBox(width: 10.0, height: 10.0),
-                              RoutingButton("Weekly quiz", context, () async {
-                                Navigator.push(
-                                    context,
-                                    SlideAnimationRoute(
-                                        child: QuizScreen(
-                                            questionaire: questionaire),
-                                        slideRight:
-                                            true)); // Navigate to the screen after successful sign in
-                              }),
+                              IgnorePointer(
+                                ignoring: !isWeeklyQuizAvailable,
+                                child: RoutingButton(
+                                  "Daily Quiz: ${weeklyQuiz != null
+                                          ? weeklyQuiz!.values.first
+                                          : 'Quiz not available'}",
+                                  context,
+                                  () => navigateToQuizScreen(
+                                      weeklyQuiz!.keys.first),
+                                  // Navigate to the screen after successful sign in
+                                ),
+                              ),
                               // RoutingButton("Quiz", "path"),
                             ],
                           )),

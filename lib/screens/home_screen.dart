@@ -1,6 +1,7 @@
 import 'package:elosystem/DTO/questionaireDTO.dart';
 import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
 import 'package:elosystem/screens/quizScreens/quizScreen.dart';
+import 'package:elosystem/screens/quizScreens/quizSelection.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
@@ -24,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}])]);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushReplacement(
                               context,
                               SlideAnimationRoute(
-                                child: const AssignmentScreen(),
+                                child: const QuizSelection(),
                                 slideRight: true,
                               ),
                             );
