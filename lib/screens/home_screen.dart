@@ -1,5 +1,4 @@
 import 'package:elosystem/DTO/questionaireDTO.dart';
-import 'package:elosystem/screens/assignmentScreens/assignment_screen.dart';
 import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:elosystem/screens/quizScreens/quizSelection.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
@@ -9,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 // ignore_for_file: use_build_context_synchronously
-import 'package:elosystem/screens/quizScreens/quiz_screen.dart';
 import 'package:elosystem/screens/scoreScreens/score_screen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
