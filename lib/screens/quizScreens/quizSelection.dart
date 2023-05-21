@@ -26,6 +26,9 @@ class _QuizSelectionState extends State<QuizSelection> {
   Future<void> fetchDailyQuiz() async {
     dailyQuiz = await QuestionnaireService().getWeeklyOrDaily("dailyQuiz");
     weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weeklyQuiz");
+
+    dailyQuiz ??= {"": "Quiz not available"};
+    weeklyQuiz ??= {"": "Quiz not available"};
   }
 
   Future<void> fetchSelectedQuestionaire(String uId) async {
@@ -55,99 +58,79 @@ class _QuizSelectionState extends State<QuizSelection> {
   Widget build(BuildContext context) {
     bool isDailyQuizAvailable = dailyQuiz != null;
     bool isWeeklyQuizAvailable = weeklyQuiz != null;
+
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Home'),
-          backgroundColor: hexStringToColor("fdbb2d"),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              // Handle back button press
-              Navigator.pop(context);
+      appBar: AppBar(
+        title: Text('Home'),
+        backgroundColor: hexStringToColor("fdbb2d"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Handle back button press
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              hexStringToColor("fdbb2d"),
+              hexStringToColor("22c1c3"),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 00.0, right: 00.0),
+          child: FutureBuilder<String>(
+            future: authService.getCurrentUserName(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                return Stack(
+                  children: <Widget>[
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.55,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          IgnorePointer(
+                            ignoring: !isDailyQuizAvailable,
+                            child: RoutingButton(
+                              "Daily Quiz: ${dailyQuiz != null ? dailyQuiz!.values.first : 'Quiz not available'}",
+                              context,
+                                  () => navigateToQuizScreen(dailyQuiz!.keys.last),
+                            ),
+                          ),
+                          const SizedBox(width: 10.0, height: 10.0),
+                          IgnorePointer(
+                            ignoring: !isWeeklyQuizAvailable,
+                            child: RoutingButton(
+                              "Weekly Quiz: ${weeklyQuiz != null ? weeklyQuiz!.values.first : 'Quiz not available'}",
+                              context,
+                                  () => navigateToQuizScreen(weeklyQuiz!.keys.first),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
             },
           ),
         ),
-        body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  hexStringToColor("fdbb2d"),
-                  hexStringToColor("22c1c3"),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 00.0, right: 00.0),
-              child: FutureBuilder<String>(
-                future: authService.getCurrentUserName(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    return Stack(children: <Widget>[
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.05,
-                        left: 0,
-                        child: signOutButton("Sign out", context, () async {
-                          AuthService authService = AuthService.instance();
-                          try {
-                            await authService.signOut();
-                            Navigator.push(
-                                context,
-                                SlideAnimationRoute(
-                                    child: const SignInScreen(),
-                                    slideRight: true));
-                          } catch (error) {
-                            print("Error signing out: $error");
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Error signing out: $error")));
-                          }
-                        }),
-                      ),
-                      Positioned(
-                          top: MediaQuery.of(context).size.height * 0.55,
-                          left: 0,
-                          right: 0,
-                          child: Column(
-                            children: [
-                              IgnorePointer(
-                                ignoring: !isDailyQuizAvailable,
-                                child: RoutingButton(
-                                    "Daily Quiz: ${dailyQuiz != null
-                                            ? dailyQuiz!.values.first
-                                            : 'Quiz not available'}",
-                                    context,
-                                    () => navigateToQuizScreen(dailyQuiz!.keys.first)),
-                              ),
-                              const SizedBox(width: 10.0, height: 10.0),
-                              IgnorePointer(
-                                ignoring: !isWeeklyQuizAvailable,
-                                child: RoutingButton(
-                                  "Daily Quiz: ${weeklyQuiz != null
-                                          ? weeklyQuiz!.values.first
-                                          : 'Quiz not available'}",
-                                  context,
-                                  () => navigateToQuizScreen(
-                                      weeklyQuiz!.keys.first),
-                                  // Navigate to the screen after successful sign in
-                                ),
-                              ),
-                              // RoutingButton("Quiz", "path"),
-                            ],
-                          )),
-                    ]);
-                  }
-                },
-              ),
-            )));
+      ),
+    );
   }
 }

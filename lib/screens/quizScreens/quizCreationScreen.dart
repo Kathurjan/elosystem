@@ -36,6 +36,7 @@ class _QuizCreationState extends State<QuizCreation> {
     if (widget.editUId != null) {
       fetchQuestainnaireEdit();
       questionEditIndex = 0;
+      print(widget.editUId);
     }
   }
 
@@ -53,7 +54,7 @@ class _QuizCreationState extends State<QuizCreation> {
     }
   }
 
-  editQuestionCall(int newIndex, context) {
+  void editQuestionCall(int newIndex, context, TextEditingController controller) {
     // Checks and dialog pop up to prevent missclicks
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
@@ -68,6 +69,7 @@ class _QuizCreationState extends State<QuizCreation> {
                       Navigator.of(context).pop();
                       questionCreation(context);
                       setState(() {
+                        controller.text = questionnaire.quizQuestion[newIndex].question;
                         _answers = questionnaire.quizQuestion[newIndex].answers;
                         questionEditIndex = newIndex;
                       });
@@ -77,6 +79,7 @@ class _QuizCreationState extends State<QuizCreation> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       setState(() {
+                        controller.text = questionnaire.quizQuestion[newIndex].question;
                         _answers = questionnaire.quizQuestion[newIndex].answers;
                         _QuestionController.clear();
                         _AnswerController.clear();
@@ -111,8 +114,13 @@ class _QuizCreationState extends State<QuizCreation> {
                       if (_QuestionnaireController.text.isNotEmpty) {
                         tempname = _QuestionnaireController.text;
                         questionnaire.name = tempname;
-                        await QuestionnaireService()
-                            .addQuestionaire(questionnaire);
+                        if (widget.editUId == null) {
+                          await QuestionnaireService()
+                              .addQuestionaire(questionnaire);
+                        }
+                        else{
+                          await QuestionnaireService().setQuestionaire(questionnaire, widget.editUId!);
+                        }
                         Navigator.of(context).pop();
                         Navigator.pop(context);
                       } else {
@@ -408,8 +416,9 @@ class _QuizCreationState extends State<QuizCreation> {
                                                           .text.isNotEmpty &&
                                                       _answers.isNotEmpty) {
                                                     editQuestionCall(
-                                                        newIndex, context);
+                                                        newIndex, context, _QuestionController);
                                                   } else {
+                                                    _QuestionController.text = questionnaire.quizQuestion[newIndex].question;
                                                     _answers = questionnaire
                                                         .quizQuestion[newIndex]
                                                         .answers;

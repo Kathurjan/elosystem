@@ -126,4 +126,35 @@ class QuestionnaireService {
   Future<void> removeQuestionnaire(String uId) async {
     await questionnaireCollection.doc(uId).delete();
   }
+
+  Future<void> setQuestionaire(Questionnaire questionnaire, String uID) async {
+    Map<String, dynamic> questionnaireData = {
+      "uId": uID,
+      "name": questionnaire.name,
+      "weeklyQuiz": questionnaire.weeklyQuiz,
+      "dailyQuiz": questionnaire.dailyQuiz,
+      'quizQuestion': questionnaire.quizQuestion.map((question) {
+        return {
+          'question': question.question,
+          'answers': question.answers,
+        };
+      }).toList(),
+    };
+    
+    print(uID);
+    questionnaireCollection.doc(uID).set(questionnaireData).then((documentRef) {
+    }).catchError((error) {
+      print('Error adding questionnaire: $error');
+    });
+  }
+
+  Future<void> addScoreFromQuiz(String uId, score) async {
+    try{
+      FirebaseFirestore.instance.collection("users").doc(uId).update({"score": FieldValue.increment(score)});
+    }
+    catch(error){
+      throw ArgumentError("Something went wrong");
+    }
+
+  }
 }

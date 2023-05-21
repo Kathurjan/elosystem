@@ -12,31 +12,41 @@ class QuizScreen extends StatefulWidget {
   _QuizScreenState createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen> {
+class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   int _currentQuestionIndex = 0;
   int _score = 0;
+  int? _selectedAnswerIndex;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
+
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    super.initState();
+  }
 
   void _onAnswerSelected(int selectedAnswerIndex) {
-    if (widget.questionnaire.quizQuestion[_currentQuestionIndex].answers[selectedAnswerIndex].values.first == true) {
+    if (widget.questionnaire.quizQuestion[_currentQuestionIndex]
+        .answers[selectedAnswerIndex].values.first ==
+        true) {
       setState(() {
         _score++;
       });
     }
 
-
     if (_currentQuestionIndex < widget.questionnaire.quizQuestion.length - 1) {
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => QuizScreen(questionnaire: widget.questionnaire),
-          transitionsBuilder: (context, animation1, animation2, child) {
-            return FadeTransition(opacity: animation1, child: child);
-          },
-          transitionDuration: Duration(milliseconds: 500),
-        ),
-      );
-      setState(() {
-        _currentQuestionIndex++;
+      _animationController.forward().then((_) {
+        setState(() {
+          _currentQuestionIndex++;
+          _selectedAnswerIndex = null;
+        });
+        _animationController.reset();
       });
     } else {
       // Quiz is over, show score
@@ -44,12 +54,14 @@ class _QuizScreenState extends State<QuizScreen> {
         context: context,
         builder: (_) => AlertDialog(
           title: Text('Quiz finished'),
-          content: Text('Your score is $_score out of ${widget.questionnaire.quizQuestion.length}'),
+          content: Text(
+              'Your score is $_score out of ${widget.questionnaire.quizQuestion.length}, your extra score credit will only be added to your personal rating ONCE'),
           actions: [
             TextButton(
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             )
           ],
@@ -58,10 +70,10 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    QuizQuestion currentQuestion = widget.questionnaire.quizQuestion[_currentQuestionIndex];
+    QuizQuestion currentQuestion =
+    widget.questionnaire.quizQuestion[_currentQuestionIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +83,7 @@ class _QuizScreenState extends State<QuizScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             // Handle back button press
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -90,16 +102,24 @@ class _QuizScreenState extends State<QuizScreen> {
                   (index) => RadioListTile(
                 title: Text(currentQuestion.answers[index].keys.first),
                 value: index,
-                groupValue: null,
-                onChanged: (value) => {
-                  if(value != null){
-                    _onAnswerSelected(value)
-                  }},
+                groupValue: _selectedAnswerIndex,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedAnswerIndex = value as int?;
+                    _onAnswerSelected(_selectedAnswerIndex!);
+                  });
+                },
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 }
