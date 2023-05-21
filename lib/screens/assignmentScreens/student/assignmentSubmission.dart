@@ -1,9 +1,10 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// assignmentSubmission.dart
 
 import 'package:flutter/material.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
 import '../../../utils/fire_service/auth_service.dart';
+import 'assignmentSubmission.dart';
 
 class AssignmentSubmission extends StatefulWidget {
   final Map<String, dynamic> assignment;
@@ -60,6 +61,9 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
               onPressed: () {
                 submitAssignment();
               },
+              style: ElevatedButton.styleFrom(
+                primary: hexStringToColor("fdbb2d"),
+              ),
               child: const Text('Submit'),
             ),
           ],
@@ -73,11 +77,15 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
     String assignmentId = widget.assignmentId;
     String studentId = await _authService.getCurrentUserId() ?? '';
 
-// checking if both assignmentId and studentId are not empty
+    // checking if both assignmentId and studentId are not empty
     if (assignmentId.isNotEmpty && studentId.isNotEmpty) {
       try {
-        // aubmit the assignment using the assignmentService
-        await _assignmentService.submitAssignment(assignmentId, studentId, gitRepoLink);
+        // submit the assignment using the assignmentService
+        await _assignmentService.submitAssignment(
+          assignmentId,
+          studentId,
+          gitRepoLink,
+        );
 
         // show a dialog to indicate successful submission
         showDialog(
@@ -95,6 +103,10 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
                 child: const Text('OK'),
               ),
             ],
+            backgroundColor: hexStringToColor("fdbb2d"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       } catch (error) {
@@ -102,7 +114,9 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Submission Failed'),
-            content: const Text('There was an error while submitting your assignment. Please try again.'),
+            content: const Text(
+              'There was an error while submitting your assignment. Please try again.',
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -111,6 +125,10 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
                 child: const Text('OK'),
               ),
             ],
+            backgroundColor: hexStringToColor("fdbb2d"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       }
@@ -128,6 +146,10 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
               child: const Text('OK'),
             ),
           ],
+          backgroundColor: hexStringToColor("fdbb2d"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }

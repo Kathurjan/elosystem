@@ -120,7 +120,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizScreen(),
+                                builder: (context) => AssignmentScreen(),
                               ),
                             );
                           }),

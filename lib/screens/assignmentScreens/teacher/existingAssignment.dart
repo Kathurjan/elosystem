@@ -51,17 +51,28 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
   }
 
   Future<void> assignPoints(
-      String assignmentId, String studentId, int points) async {
+      String assignmentId,
+      String studentId,
+      int points,
+      ) async {
     try {
       await _assignmentService.assignPointsToStudent(studentId, points);
-      // used for some logic so we can disable the button or change the color of the students name
-      await _assignmentService.updatePointsAssignedStatus(
-          assignmentId, studentId, true);
+
+      setState(() {
+        // change the points assinged to true based on studenId
+        submissionsMap[assignmentId]?.forEach((submission) {
+          if (submission['studentId'] == studentId) {
+            submission['pointsAssigned'] = true;
+          }
+        });
+      });
+
       pointsFieldController.clear();
     } catch (error) {
       print('Error assigning points: $error');
     }
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
