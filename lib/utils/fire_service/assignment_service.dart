@@ -76,7 +76,7 @@ class AssignmentService {
       List<Map<String, dynamic>> assignments = [];
 
       for (QueryDocumentSnapshot doc in snapshot.docs) {
-        // Get assignment data from firestore
+        // Get assignment data from Firestore
         Map<String, dynamic> assignmentData = doc.data() as Map<String, dynamic>;
         dynamic submissionDeadline = assignmentData['submissionDeadline'];
 
@@ -84,12 +84,12 @@ class AssignmentService {
           DateTime submissionDeadlineDate = submissionDeadline.toDate();
           int daysLeft = submissionDeadlineDate.difference(currentDate).inDays;
 
-          if (daysLeft >= 0) {
-            // add assignment data to the assignmentData map
+          if (daysLeft > 0) {  // Update condition here
+            // Add assignment data to the assignmentData map
             assignmentData['id'] = doc.id;
             assignmentData['daysLeft'] = daysLeft;
 
-            // add the assignmentData to the assignments list
+            // Add the assignmentData to the assignments list
             assignments.add(assignmentData);
           }
         }
@@ -100,6 +100,7 @@ class AssignmentService {
       rethrow;
     }
   }
+
 // getting the submissions for the specific assignments
   Future<List<Map<String, dynamic>>> getSubmissionsForAssignment(String assignmentId) async {
     try {
