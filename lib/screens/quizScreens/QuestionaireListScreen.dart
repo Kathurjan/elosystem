@@ -1,5 +1,5 @@
+import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:elosystem/screens/quizScreens/quizCreationScreen.dart';
-import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:elosystem/utils/fire_service/questionairService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +15,13 @@ class QuestionnaireListScreen extends StatefulWidget {
 
 class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
   AuthService authService = AuthService.instance();
-  List<Map<String, String>>? listOfQuestionaires;
+  List<Map<String, String>> listOfQuestionaires = [];
 
   Future<void> fetchQuestionnaires() async {
-    listOfQuestionaires = await QuestionnaireService().getQuestionaireList();
+    final questionnaires = await QuestionnaireService().getQuestionaireList();
+    setState(() {
+      listOfQuestionaires = questionnaires;
+    });
   }
 
   @override
@@ -57,6 +60,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
         child: Padding(
           padding: const EdgeInsets.only(left: 30.0, right: 30.0),
           child: FutureBuilder<String>(
+
             future: authService.getCurrentUserName(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -70,6 +74,9 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
               } else {
                 return Column(
                   children: [
+                    SizedBox(
+                      height: 50,
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -77,88 +84,109 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                           MaterialPageRoute(
                             builder: (context) => QuizCreation(),
                           ),
-                        );
+                        ).then((value) => {
+                          if(value == true){
+                            fetchQuestionnaires()
+                          }
+                        });
                       },
+                      style: QuizeButtonStyle,
                       child: Text(
                         "Make a new questionnaire",
-                        style: const TextStyle(
-                          color: Colors.red,
+                        style: TextStyle(
+                          color: Colors.blue.shade800,
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
                         ),
                       ),
                     ),
+                    SizedBox(height: 50),
                     Container(
-                      height: 400,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(30.0),
+                        border: Border.all(color: Colors.black,
+                        width: 1.0,
+                        style: BorderStyle.solid),
+                      ),
+                      height: 600,
                       child: ListView.builder(
-                          itemCount: listOfQuestionaires?.length,
+                          itemCount: listOfQuestionaires.isNotEmpty ? listOfQuestionaires.length : 1,
                           itemBuilder: (BuildContext context, int index) {
-                            if (listOfQuestionaires == null || listOfQuestionaires!.isEmpty) {
-                              return const Center(
+                            if (listOfQuestionaires.isEmpty) {
+                              return  Center(
                                 child: Padding(
                                   padding:
                                       EdgeInsets.fromLTRB(0, 20, 0, 0),
                                   child: Text(
                                     "No questionaires",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.blue.shade800,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
                                   ),
                                 ),
                               );
                             } else {
                               final name =
-                                  listOfQuestionaires?[index].values.first ?? "";
+                                  listOfQuestionaires[index].values.first ?? "";
                               return Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.black,
+                                      width: 1.0,
+                                      style: BorderStyle.solid,
+                                    )
+                                  )),
                                 child: ListTile(
-                                  title: Text(name),
+                                  title: Text(name, style: TextStyle(color: Colors.blue.shade800,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),),
                                   trailing: Container(
-                                    width: 100,
+                                    width: 200,
                                     child: Row(
                                       children: [
                                         IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: ()  {
-                                                  setState(() {
-                                                    listOfQuestionaires!.removeAt(index);
-                                                    QuestionnaireService().removeQuestionnaire(listOfQuestionaires![index].keys.first);
-                                                  });
-                                                }),
-                                        IconButton(
                                           onPressed: () async {
                                             await QuestionnaireService()
                                                 .updateWeeklyOrDailyQuiz(
-                                                    listOfQuestionaires![index]
+                                                    listOfQuestionaires[index]
                                                         .keys
                                                         .first,
-                                                    "day");
+                                                    "dailyQuiz");
                                           },
-                                          icon: Icon(Icons.abc_outlined),
+                                          icon: Icon(Icons.calendar_view_day),
                                         ),
                                         IconButton(
                                           onPressed: () async {
                                             await QuestionnaireService()
                                                 .updateWeeklyOrDailyQuiz(
-                                                    listOfQuestionaires![index]
+                                                    listOfQuestionaires[index]
                                                         .keys
                                                         .first,
-                                                    "week");
+                                                    "weeklyQuiz");
                                           },
-                                          icon: Icon(Icons.abc_outlined),
+                                          icon: Icon(Icons.calendar_view_week),
                                         ),
                                         IconButton(
-                                          icon: Icon(Icons.abc_outlined),
                                           onPressed: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => QuizCreation(editUId: listOfQuestionaires![index].keys.first),
+                                                builder: (context) => QuizCreation(editUId: listOfQuestionaires[index].keys.first),
                                               ),
                                             );
                                           },
+                                          icon: Icon(Icons.edit),
                                         ),
+                                        IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: ()  {
+                                              setState(() {
+                                                QuestionnaireService().removeQuestionnaire(listOfQuestionaires[index].keys.first);
+                                                listOfQuestionaires.removeAt(index);
+                                              });
+                                            }),
                                       ],
                                     ),
                                   ),

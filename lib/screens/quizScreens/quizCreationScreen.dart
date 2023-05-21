@@ -1,3 +1,4 @@
+import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:elosystem/utils/fire_service/questionairService.dart';
 import 'package:flutter/material.dart';
 
@@ -20,26 +21,27 @@ class QuizCreation extends StatefulWidget {
 class _QuizCreationState extends State<QuizCreation> {
   AuthService authService = AuthService.instance();
   Questionnaire questionnaire = Questionnaire(
-      quizQuestion: [], name: "", uId: "", weeklyQuiz: false, dailyQuiz: false);
+      quizQuestion: [], uId: "", weeklyQuiz: false, dailyQuiz: false);
   List<Map<String, bool>> _answers = [];
   bool _dropdownValue = false;
-  bool editMode = false;
+  int questionEditIndex = -1;
 
   final TextEditingController _QuestionController = TextEditingController();
   final TextEditingController _AnswerController = TextEditingController();
+  final TextEditingController _QuestionnaireController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.editUId != null) {
       fetchQuestainnaireEdit();
+      questionEditIndex = 0;
     }
   }
 
   Future<void> fetchQuestainnaireEdit() async {
     this.questionnaire =
-        await QuestionnaireService().getQuestionaire(widget.editUId!);
+        await QuestionnaireService().getQuestionnaire(widget.editUId!);
     _answers = this.questionnaire.quizQuestion[0].answers;
   }
 
@@ -53,7 +55,7 @@ class _QuizCreationState extends State<QuizCreation> {
 
   editQuestionCall(int newIndex, context) {
     // Checks and dialog pop up to prevent missclicks
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
           context: context,
           builder: (context) {
@@ -67,7 +69,7 @@ class _QuizCreationState extends State<QuizCreation> {
                       questionCreation(context);
                       setState(() {
                         _answers = questionnaire.quizQuestion[newIndex].answers;
-                        editMode = true;
+                        questionEditIndex = newIndex;
                       });
                     },
                     child: Text("Yes")),
@@ -78,7 +80,7 @@ class _QuizCreationState extends State<QuizCreation> {
                         _answers = questionnaire.quizQuestion[newIndex].answers;
                         _QuestionController.clear();
                         _AnswerController.clear();
-                        editMode = true;
+                        questionEditIndex = newIndex;
                       });
                     },
                     child: Text("No")),
@@ -91,6 +93,70 @@ class _QuizCreationState extends State<QuizCreation> {
             );
           });
     });
+  }
+
+  finishQuestionnaire(context) {
+    if (questionnaire.quizQuestion.length >= 1) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            String tempname = "";
+            return AlertDialog(
+              title: Text("Add a name to your questionnaire"),
+              content: QuizTextFields(
+                  _QuestionnaireController, "name here...", "Add your name"),
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      if (_QuestionnaireController.text.isNotEmpty) {
+                        tempname = _QuestionnaireController.text;
+                        questionnaire.name = tempname;
+                        await QuestionnaireService()
+                            .addQuestionaire(questionnaire);
+                        Navigator.of(context).pop();
+                        Navigator.pop(context);
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Give it a name please"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("ok"))
+                                ],
+                              );
+                            });
+                      }
+                    },
+                    child: Text("Finish")),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Cancel")),
+              ],
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("The quiz must have atleast one question"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Go back"))
+              ],
+            );
+          });
+    }
   }
 
   void questionCreation(BuildContext context) {
@@ -107,16 +173,17 @@ class _QuizCreationState extends State<QuizCreation> {
         final answerValue = answer.values.first == true;
         return <String, bool>{answerText: answerValue};
       }).toList();
-
       final quizQuestion = QuizQuestion(
         question: _QuestionController.text,
         answers: quizAnswers,
       );
-
       setState(() {
+        if(questionEditIndex >= 0){
+          questionnaire.quizQuestion.removeAt(questionEditIndex);
+          questionEditIndex = -1;
+        }
         questionnaire.quizQuestion.add(quizQuestion);
       });
-
       _QuestionController.clear();
       _AnswerController.clear();
       _answers.clear();
@@ -133,7 +200,7 @@ class _QuizCreationState extends State<QuizCreation> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text("ok"))
+                      child: Text("cancel"))
                 ],
               );
             });
@@ -146,6 +213,7 @@ class _QuizCreationState extends State<QuizCreation> {
     // main body of the quiz creator
     return Scaffold(
         appBar: AppBar(
+          // back button
           title: Text(
             widget.editUId != null ? 'Questionnaire list' : 'Home',
           ),
@@ -153,7 +221,6 @@ class _QuizCreationState extends State<QuizCreation> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              // Handle back button press
               Navigator.pop(context);
             },
           ),
@@ -205,37 +272,10 @@ class _QuizCreationState extends State<QuizCreation> {
                                   child: Row(
                                     children: [
                                       Flexible(
-                                        child: TextField(
-                                          controller: _QuestionController,
-                                          style: TextStyle(
-                                            color: Colors.black.withAlpha(200),
-                                          ),
-                                          enabled: true,
-                                          decoration: InputDecoration(
-                                            prefixIcon: const Icon(
-                                              Icons.help_outline,
-                                              color: Colors.black,
-                                            ),
-                                            labelText:
-                                                "What question do you want to ask",
-                                            labelStyle: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                            hintText: "Question...",
-                                            filled: true,
-                                            floatingLabelBehavior:
-                                                FloatingLabelBehavior.always,
-                                            fillColor:
-                                                Colors.white.withAlpha(50),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              borderSide: const BorderSide(
-                                                  width: 0,
-                                                  style: BorderStyle.solid),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                          child: QuizTextFields(
+                                              _QuestionController,
+                                              "question name...",
+                                              "Name your question")),
                                       IconButton(
                                           onPressed: () {
                                             setState(() {
@@ -252,39 +292,13 @@ class _QuizCreationState extends State<QuizCreation> {
                                   child: Row(
                                     children: [
                                       Flexible(
-                                        child: TextField(
-                                          controller: _AnswerController,
-                                          style: TextStyle(
-                                            color: Colors.white.withAlpha(200),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          enabled: true,
-                                          decoration: InputDecoration(
-                                            prefixIcon: const Icon(
-                                              Icons.error_outline,
-                                              color: Colors.black,
-                                            ),
-                                            labelText: "Add an answer",
-                                            hintText: "Answer...",
-                                            hintStyle: const TextStyle(
-                                                fontWeight: FontWeight.normal),
-                                            filled: true,
-                                            floatingLabelBehavior:
-                                                FloatingLabelBehavior.always,
-                                            fillColor:
-                                                Colors.white.withAlpha(50),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              borderSide: const BorderSide(
-                                                  width: 0,
-                                                  style: BorderStyle.solid),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                          // Answer field
+                                          child: QuizTextFields(
+                                              _AnswerController,
+                                              "write answer here...",
+                                              "Add an answer")),
                                       Container(
+                                        // Right or wrong asnwer selector
                                         margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                         child: DropDownButtonCustom(
                                           initialValue: _dropdownValue,
@@ -296,6 +310,7 @@ class _QuizCreationState extends State<QuizCreation> {
                                         ),
                                       ),
                                       IconButton(
+                                          // add answer to list button
                                           onPressed: () {
                                             setState(() {
                                               _answers.add({
@@ -310,39 +325,11 @@ class _QuizCreationState extends State<QuizCreation> {
                                   ),
                                 ),
                                 ElevatedButton(
+                                  // finish questionnaire button
                                   onPressed: () async {
-                                    await QuestionnaireService()
-                                        .addQuestionaire(questionnaire);
+                                    finishQuestionnaire(context);
                                   },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>(
-                                      (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.disabled)) {
-                                          return Colors.grey; // Disabled color
-                                        }
-                                        return Colors.orange; // Default color
-                                      },
-                                    ),
-                                    textStyle:
-                                        MaterialStateProperty.all<TextStyle>(
-                                      TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    shape: MaterialStateProperty.all<
-                                        OutlinedBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    padding: MaterialStateProperty.all<
-                                        EdgeInsetsGeometry>(
-                                      EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 24),
-                                    ),
-                                  ),
+                                  style: QuizeButtonStyle,
                                   child: Text(
                                     "Finish the questionaire",
                                     style: TextStyle(
@@ -356,11 +343,13 @@ class _QuizCreationState extends State<QuizCreation> {
                             ),
                           ),
                           Container(
-                            child: editMode
-                                ? const Text(
-                                    'In edit mode',
+                            alignment: Alignment.center,
+                            child: questionEditIndex >= 0 ? const Text(
+                                    "editing question",
                                     style: TextStyle(
                                       color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20
                                     ),
                                   )
                                 : null,
@@ -424,7 +413,7 @@ class _QuizCreationState extends State<QuizCreation> {
                                                     _answers = questionnaire
                                                         .quizQuestion[newIndex]
                                                         .answers;
-                                                    editMode = true;
+                                                    questionEditIndex = newIndex;
                                                   }
                                                 });
                                               }),

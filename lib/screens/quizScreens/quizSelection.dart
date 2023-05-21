@@ -24,12 +24,12 @@ class _QuizSelectionState extends State<QuizSelection> {
   Questionnaire? questionnaire;
 
   Future<void> fetchDailyQuiz() async {
-    dailyQuiz = await QuestionnaireService().getWeeklyOrDaily("daily");
-    weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weekly");
+    dailyQuiz = await QuestionnaireService().getWeeklyOrDaily("dailyQuiz");
+    weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weeklyQuiz");
   }
 
   Future<void> fetchSelectedQuestionaire(String uId) async {
-    questionnaire = await QuestionnaireService().getQuestionaire(uId);
+    questionnaire = await QuestionnaireService().getQuestionnaire(uId);
   }
 
   @override
@@ -126,8 +126,7 @@ class _QuizSelectionState extends State<QuizSelection> {
                                             ? dailyQuiz!.values.first
                                             : 'Quiz not available'}",
                                     context,
-                                    () => navigateToQuizScreen(
-                                        dailyQuiz!.keys.first)),
+                                    () => navigateToQuizScreen(dailyQuiz!.keys.first)),
                               ),
                               const SizedBox(width: 10.0, height: 10.0),
                               IgnorePointer(
