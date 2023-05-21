@@ -124,4 +124,15 @@ class AuthService {
     }
     return null;
   }
+
+  Future<String> getScore() async{
+    final currentUser = _firebaseAuth.currentUser;
+    if(currentUser == null){
+      throw FirebaseAuthException(message: 'No user signed in', code: '');
+    }
+    final userDoc = await _usersCollection.doc('score').get();
+    final userName = (userDoc.data() as Map<String, dynamic>)?['userName'] as String?;
+    return userName.toString();
+
+  }
 }
