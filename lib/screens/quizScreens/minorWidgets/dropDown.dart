@@ -54,6 +54,19 @@ class _DropDownButtonCustomState extends State<DropDownButtonCustom> {
       value: _dropdownValue,
       onChanged: dropdownCallback,
       borderRadius: BorderRadius.circular(2),
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: Colors.black,
+      ),
+      underline: Container(
+        height: 2,
+        color: Colors.black,
+      ),
     );
   }
 }

@@ -1,7 +1,4 @@
-import 'package:elosystem/screens/quizScreens/quizCreation.dart';
-import 'package:elosystem/screens/quizScreens/quizScreen.dart';
-import 'package:elosystem/screens/quizScreens/quizSelection.dart';
-import 'package:elosystem/screens/statsScreens/stats_screen.dart';
+import 'package:elosystem/screens/quizScreens/QuestionaireListScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
@@ -123,7 +120,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizSelection(),
+                                builder: (context) => QuestionnaireListScreen(),
                               ),
                             );
                           }),

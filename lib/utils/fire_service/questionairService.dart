@@ -24,7 +24,7 @@ class QuestionnaireService {
       print('Questionnaire added with ID: ${documentRef.id}');
       questionnaireCollection
           .doc(documentRef.id)
-          .update({"uId": documentRef.id});
+          .set({"uId": documentRef.id});
     }).catchError((error) {
       print('Error adding questionnaire: $error');
     });
@@ -104,5 +104,9 @@ class QuestionnaireService {
       return stringMap;
     });
     throw Error();
+  }
+
+  Future<void> removeQuestionnaire(String uId) async {
+    await questionnaireCollection.doc(uId).delete();
   }
 }

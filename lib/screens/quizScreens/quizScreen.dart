@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../DTO/questionaireDTO.dart';
-import '../../utils/fire_service/questionairService.dart';
+import '../../utils/color_utils.dart';
 
 
 class QuizScreen extends StatefulWidget {
@@ -65,7 +65,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quiz'),
+        title: Text('Selection'),
+        backgroundColor: hexStringToColor("fdbb2d"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Handle back button press
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),

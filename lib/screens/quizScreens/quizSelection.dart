@@ -1,7 +1,6 @@
 import 'package:elosystem/screens/quizScreens/quizScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../DTO/questionaireDTO.dart';
 import '../../reusable_widgets/resuable_widgets.dart';
 import '../../utils/color_utils.dart';
@@ -57,6 +56,17 @@ class _QuizSelectionState extends State<QuizSelection> {
     bool isDailyQuizAvailable = dailyQuiz != null;
     bool isWeeklyQuizAvailable = weeklyQuiz != null;
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          backgroundColor: hexStringToColor("fdbb2d"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Handle back button press
+              Navigator.pop(context);
+            },
+          ),
+        ),
         body: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
