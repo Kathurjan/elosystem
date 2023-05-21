@@ -18,6 +18,11 @@ class _StatsScreenState extends State {
 
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Stats'),
+          backgroundColor: hexStringToColor("fdbb2d"),
+        ),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -40,14 +45,6 @@ class _StatsScreenState extends State {
                         .height * 0.05,
                     left: 0,
                     child: Column(
-                        children: [
-                          ReturnButton("Back", context, () async {
-                            Navigator.push(context, SlideAnimationRoute(
-                                child: HomeScreen(),
-                                slideRight: true)); // Navigate to the screen after successful sign in
-                          }
-                          ),
-                        ]
                     ),
                   ),
                 ],

@@ -125,14 +125,36 @@ class AuthService {
     return null;
   }
 
-  Future<String> getScore() async{
-    final currentUser = _firebaseAuth.currentUser;
-    if(currentUser == null){
-      throw FirebaseAuthException(message: 'No user signed in', code: '');
+  Future<List<Map<String, dynamic>>> getScore() async {
+    try {
+      QuerySnapshot snapshot = await _usersCollection.get();
+      List<Map<String, dynamic>> leaderboard = [];
+
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        String studentId = doc.id;
+        Map<String, dynamic> scoreData = doc.data() as Map<String, dynamic>;
+
+        DocumentSnapshot studentSnapshot = await _usersCollection.doc(studentId).get();
+        print('Student snapshot data: ${studentSnapshot.data()}');
+
+        if (studentSnapshot.exists) {
+          String userName = studentSnapshot.get('userName') as String;
+          int score = studentSnapshot.get('score') as int;
+          print('Student name: $userName');
+
+          scoreData['userName'] = userName;
+          scoreData['score'] = score;
+
+          leaderboard.add(scoreData);
+        } else {
+          print('Student snapshot does not exist');
+        }
+      }
+
+      return leaderboard;
+    } catch (e) {
+      rethrow;
     }
-    final userDoc = await _usersCollection.doc('score').get();
-    final userName = (userDoc.data() as Map<String, dynamic>)?['userName'] as String?;
-    return userName.toString();
 
   }
 }

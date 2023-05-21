@@ -1,5 +1,5 @@
 import 'package:elosystem/DTO/questionaireDTO.dart';
-import 'package:elosystem/screens/scoreScreens/score_screen.dart';
+import 'package:elosystem/screens/scoreScreens/scorescreen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.logout_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () => {
+              authService.signOut(),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignInScreen(),
+                  ),
+            )
+            },
+          )
+        ],
+        centerTitle: true,
+        title: const Text('Home Menu'),
+        backgroundColor: hexStringToColor("fdbb2d"),
+          automaticallyImplyLeading: false,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -55,29 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 final studentId = authService.getCurrentUserId();
                 return Stack(
                   children: <Widget>[
-                    Positioned(
-                      top: MediaQuery.of(context).size.height * 0.05,
-                      left: 0,
-                      child: signOutButton("Sign out", context, () async {
-                        AuthService authService = AuthService.instance();
-                        try {
-                          await authService.signOut();
-                          Navigator.pushReplacement(
-                            context,
-                            SlideAnimationRoute(
-                              child: const SignInScreen(),
-                              slideRight: true,
-                            ),
-                          );
-                        } catch (error) {
-                          print("Error signing out: $error");
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text("Error signing out: $error")),
-                          );
-                        }
-                      }),
-                    ),
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.1,
                       left: 0,
@@ -141,39 +141,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           RoutingButton("Assignment", context, () async {
                             Navigator.push(
                               context,
-                              SlideAnimationRoute(
-                                child: const ListOfAssignmentStudent(),
-                                slideRight: true,
+                              MaterialPageRoute(
+                                builder: (context) => ListOfAssignmentStudent(),
                               ),
                             );
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Quiz", context, () async {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
-                              SlideAnimationRoute(
-                                child: const AssignmentScreen(),
-                                slideRight: true,
+                              MaterialPageRoute(
+                                builder: (context) => AssignmentScreen(),
                               ),
                             );
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Score", context, () async {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
-                              SlideAnimationRoute(
-                                child: const ScoreScreen(),
-                                slideRight: true,
+                              MaterialPageRoute(
+                                builder: (context) => ScoreScreen(),
                               ),
                             );
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Stats", context, () async {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
-                              SlideAnimationRoute(
-                                child: const StatsScreen(),
-                                slideRight: true,
+                              MaterialPageRoute(
+                                builder: (context) => StatsScreen(),
                               ),
                             );
                           }),

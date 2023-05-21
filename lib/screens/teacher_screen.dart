@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
+import '../utils/slideAnimation.dart';
 import 'assignmentScreens/teacher/assignment_screen.dart';
-import '../screens/scoreScreens/score_screen.dart';
+import '../screens/scoreScreens/scorescreen.dart';
 import '../screens/loginScreens/signin_screen.dart';
 import '../screens/qr_scenes/QRScannerScreen.dart';
 
@@ -22,6 +23,29 @@ class _TeacherScreenState extends State<TeacherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.logout_outlined,
+              color: Colors.white,
+            ),
+            onPressed: () => {
+              authService.signOut(),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignInScreen(),
+                ),
+              )
+            },
+          )
+        ],
+        centerTitle: true,
+        title: const Text('Home Menu'),
+        backgroundColor: hexStringToColor("fdbb2d"),
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -49,29 +73,6 @@ class _TeacherScreenState extends State<TeacherScreen> {
               } else {
                 return Stack(
                   children: <Widget>[
-                    Positioned(
-                      top: MediaQuery.of(context).size.height * 0.05,
-                      left: 0,
-                      child: signOutButton("Sign out", context, () async {
-                        AuthService authService = AuthService.instance();
-                        try {
-                          await authService.signOut();
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SignInScreen(),
-                            ),
-                          );
-                        } catch (error) {
-                          print("Error signing out: $error");
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Error signing out: $error"),
-                            ),
-                          );
-                        }
-                      }),
-                    ),
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.1,
                       left: 0,
@@ -120,7 +121,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuizScreen(),
+                                builder: (context) => AssignmentScreen(),
                               ),
                             );
                           }),
@@ -134,7 +135,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             );
                           }),
                           SizedBox(width: 10.0, height: 10.0),
-                          RoutingButton("Stats", context, () async {
+                          RoutingButton("QR Scanner", context, () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
