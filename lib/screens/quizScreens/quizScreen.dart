@@ -1,3 +1,5 @@
+import 'package:elosystem/utils/fire_service/auth_service.dart';
+import 'package:elosystem/utils/fire_service/questionairService.dart';
 import 'package:flutter/material.dart';
 import '../../DTO/questionaireDTO.dart';
 import '../../utils/color_utils.dart';
@@ -5,8 +7,9 @@ import '../../utils/color_utils.dart';
 
 class QuizScreen extends StatefulWidget {
   final Questionnaire questionnaire;
+  final String? type;
 
-  QuizScreen({required this.questionnaire});
+  QuizScreen({required this.questionnaire, this.type});
 
   @override
   _QuizScreenState createState() => _QuizScreenState();
@@ -29,6 +32,22 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     super.initState();
+  }
+
+
+  void calculateScore() async {
+    num pointPerQuestion = 20 / widget.questionnaire.quizQuestion.length ;
+    int calcScore = (pointPerQuestion * _score).round();
+    String? id = AuthService.instance().getCurrentUser()?.uid;
+    String? type = widget.type;
+    String? questId = widget.questionnaire.uId;
+
+    if(id != null && type != null && questId != null){
+      await QuestionnaireService().addScoreFromQuiz(id, calcScore, type, questId);
+    }
+
+
+
   }
 
   void _onAnswerSelected(int selectedAnswerIndex) {
@@ -60,6 +79,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             TextButton(
               child: Text('OK'),
               onPressed: () {
+                calculateScore();
                 Navigator.of(context).pop();
                 Navigator.pop(context);
               },
@@ -88,6 +108,16 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         ),
       ),
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              hexStringToColor("fdbb2d"),
+              hexStringToColor("22c1c3"),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

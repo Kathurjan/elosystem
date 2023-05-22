@@ -337,7 +337,7 @@ class _QuizCreationState extends State<QuizCreation> {
                                   onPressed: () async {
                                     finishQuestionnaire(context);
                                   },
-                                  style: QuizeButtonStyle,
+                                  style: QuizButtonStyle,
                                   child: Text(
                                     "Finish the questionaire",
                                     style: TextStyle(

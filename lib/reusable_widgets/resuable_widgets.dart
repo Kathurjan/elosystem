@@ -176,7 +176,8 @@ QuizTextFields(TextEditingController controller, String hintText, String labelTe
   );
 }
 
-final ButtonStyle QuizeButtonStyle = ButtonStyle(
+final ButtonStyle QuizButtonStyle = ButtonStyle(
+
     backgroundColor: MaterialStateProperty
         .resolveWith<Color>(
           (Set<MaterialState> states) {

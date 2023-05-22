@@ -90,7 +90,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                           }
                         });
                       },
-                      style: QuizeButtonStyle,
+                      style: QuizButtonStyle,
                       child: Text(
                         "Make a new questionnaire",
                         style: TextStyle(

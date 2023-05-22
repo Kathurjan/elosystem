@@ -18,17 +18,26 @@ class QuizSelection extends StatefulWidget {
 
 class _QuizSelectionState extends State<QuizSelection> {
   AuthService authService = AuthService.instance();
-
   Map<String, String>? dailyQuiz;
   Map<String, String>? weeklyQuiz;
   Questionnaire? questionnaire;
+  bool isDailyQuizAvailable = false;
+  bool isWeeklyQuizAvailable = false;
 
   Future<void> fetchDailyQuiz() async {
     dailyQuiz = await QuestionnaireService().getWeeklyOrDaily("dailyQuiz");
-    weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weeklyQuiz");
-
     dailyQuiz ??= {"": "Quiz not available"};
+    setState(() {
+      isDailyQuizAvailable = dailyQuiz != null;
+    });
+  }
+
+  Future<void> fetchWeeklyQuiz() async{
+    weeklyQuiz = await QuestionnaireService().getWeeklyOrDaily("weeklyQuiz");
     weeklyQuiz ??= {"": "Quiz not available"};
+    setState(() {
+      isWeeklyQuizAvailable = weeklyQuiz != null;
+    });
   }
 
   Future<void> fetchSelectedQuestionaire(String uId) async {
@@ -39,15 +48,16 @@ class _QuizSelectionState extends State<QuizSelection> {
   void initState() {
     super.initState();
     fetchDailyQuiz();
+    fetchWeeklyQuiz();
   }
 
-  void navigateToQuizScreen(String uId) {
+  void navigateToQuizScreen(String uId, String type) {
     fetchSelectedQuestionaire(uId);
     if (questionnaire != null) {
       Navigator.push(
         context,
         SlideAnimationRoute(
-          child: QuizScreen(questionnaire: questionnaire!),
+          child: QuizScreen(questionnaire: questionnaire!, type: type),
           slideRight: true,
         ),
       );
@@ -56,8 +66,6 @@ class _QuizSelectionState extends State<QuizSelection> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDailyQuizAvailable = dailyQuiz != null;
-    bool isWeeklyQuizAvailable = weeklyQuiz != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -99,26 +107,34 @@ class _QuizSelectionState extends State<QuizSelection> {
                 return Stack(
                   children: <Widget>[
                     Positioned(
-                      top: MediaQuery.of(context).size.height * 0.55,
+                      top: MediaQuery.of(context).size.height * 0.30,
                       left: 0,
                       right: 0,
                       child: Column(
                         children: [
-                          IgnorePointer(
-                            ignoring: !isDailyQuizAvailable,
-                            child: RoutingButton(
-                              "Daily Quiz: ${dailyQuiz != null ? dailyQuiz!.values.first : 'Quiz not available'}",
-                              context,
-                                  () => navigateToQuizScreen(dailyQuiz!.keys.last),
+                          SizedBox(
+                            width: 350,
+                            child: ElevatedButton(
+                              onPressed: isDailyQuizAvailable
+                                  ? () => navigateToQuizScreen(dailyQuiz!.keys.last, "day")
+                                  : null,
+                              style: QuizButtonStyle,
+                              child: Text(
+                                "Daily Quiz: ${dailyQuiz != null ? dailyQuiz!.values.first : 'Quiz not available'}",
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10.0, height: 10.0),
-                          IgnorePointer(
-                            ignoring: !isWeeklyQuizAvailable,
-                            child: RoutingButton(
-                              "Weekly Quiz: ${weeklyQuiz != null ? weeklyQuiz!.values.first : 'Quiz not available'}",
-                              context,
-                                  () => navigateToQuizScreen(weeklyQuiz!.keys.first),
+                          SizedBox(
+                            width: 350,
+                            child: ElevatedButton(
+                              onPressed: isWeeklyQuizAvailable
+                                  ? () => navigateToQuizScreen(weeklyQuiz!.keys.first, "week")
+                                  : null,
+                              style: QuizButtonStyle,
+                              child: Text(
+                                "Weekly Quiz: ${weeklyQuiz != null ? weeklyQuiz!.values.first : 'Quiz not available'}",
+                              ),
                             ),
                           ),
                         ],

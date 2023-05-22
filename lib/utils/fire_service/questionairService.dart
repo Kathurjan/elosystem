@@ -48,7 +48,8 @@ class QuestionnaireService {
 
             for (final answerData in answersList) {
               final castedAnswerMap = <String, bool>{};
-              castedAnswerMap[answerData.keys.first] = answerData.values.first as bool;
+              castedAnswerMap[answerData.keys.first] =
+                  answerData.values.first as bool;
               answers.add(castedAnswerMap);
             }
             return QuizQuestion(
@@ -79,7 +80,10 @@ class QuestionnaireService {
     for (var doc in querySnapshot.docs) {
       final data = doc.data() as Map<String, dynamic>?;
 
-      if (data != null && data.containsKey(weekOrDay) && data[weekOrDay] == true && doc.id != uId) {
+      if (data != null &&
+          data.containsKey(weekOrDay) &&
+          data[weekOrDay] == true &&
+          doc.id != uId) {
         await questionnaireCollection.doc(doc.id).update({weekOrDay: false});
       }
     }
@@ -100,7 +104,7 @@ class QuestionnaireService {
   }
 
   Future<Map<String, String>> getWeeklyOrDaily(String weekOrDay) async {
-    try{
+    try {
       if (weekOrDay != "weeklyQuiz" && weekOrDay != "dailyQuiz") {
         throw ArgumentError("Wrong value for: $weekOrDay");
       }
@@ -116,11 +120,9 @@ class QuestionnaireService {
         }
       });
       return stringMap;
+    } catch (error) {
+      throw ArgumentError("Get an error: $error");
     }
-    catch(error){
-     throw ArgumentError("Get an error: $error");
-    }
-
   }
 
   Future<void> removeQuestionnaire(String uId) async {
@@ -140,21 +142,39 @@ class QuestionnaireService {
         };
       }).toList(),
     };
-    
+
     print(uID);
-    questionnaireCollection.doc(uID).set(questionnaireData).then((documentRef) {
-    }).catchError((error) {
+    questionnaireCollection
+        .doc(uID)
+        .set(questionnaireData)
+        .then((documentRef) {})
+        .catchError((error) {
       print('Error adding questionnaire: $error');
     });
   }
 
-  Future<void> addScoreFromQuiz(String uId, score) async {
-    try{
-      FirebaseFirestore.instance.collection("users").doc(uId).update({"score": FieldValue.increment(score)});
-    }
-    catch(error){
+  Future<void> addScoreFromQuiz(String uId, num score, String type, String QuestionnaireID) async {
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance.collection("users").doc(uId).get();
+      final docData = userDoc.data();
+      if (!userDoc.exists) {
+        throw ArgumentError("User doesnt exist?");
+      }
+      final quizTimeout = docData?["${type}QuizTimeout"] as Timestamp? ?? Timestamp.now();
+      final quizTimeoutId = docData?["${type}QuizTimeoutID"] as String? ?? "";
+      if (Timestamp.now().seconds > quizTimeout.seconds || quizTimeoutId == QuestionnaireID) {
+        throw ArgumentError("You already completed this quiz or your timer is still running");
+      }
+      await FirebaseFirestore.instance.collection("users").doc(uId).update({
+        "${type}QuizTimeout": Timestamp.now().seconds,
+        "${type}QuizTimeoutID": QuestionnaireID,
+        "score": FieldValue.increment(score),
+      });
+    } catch (error) {
+      print("Error: $error");
+
       throw ArgumentError("Something went wrong");
     }
-
   }
 }
