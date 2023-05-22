@@ -1,4 +1,4 @@
-import 'package:elosystem/DTO/questionaireDTO.dart';
+import 'package:elosystem/screens/quizScreens/quizSelection.dart';
 import 'package:elosystem/screens/scoreScreens/scorescreen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
 import 'package:elosystem/screens/statsScreens/stats_screen.dart';
@@ -11,7 +11,7 @@ import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import '../utils/slideAnimation.dart';
 import 'assignmentScreens/student/listOfAssigment_student.dart';
-import 'assignmentScreens/teacher/assignment_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}])]);
 
   @override
   Widget build(BuildContext context) {
@@ -150,8 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           RoutingButton("Quiz", context, () async {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => AssignmentScreen(),
+                              SlideAnimationRoute(
+                                child: const QuizSelection(),
+                                slideRight: true,
                               ),
                             );
                           }),
