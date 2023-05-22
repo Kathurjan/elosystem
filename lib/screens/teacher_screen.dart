@@ -120,7 +120,9 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuestionnaireListScreen(),
+                                builder: (context) => QuestionnaireListProvider(
+                                  child: QuestionnaireListScreen(),
+                                ),
                               ),
                             );
                           }),
