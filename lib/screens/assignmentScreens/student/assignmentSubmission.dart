@@ -1,5 +1,3 @@
-// assignmentSubmission.dart
-
 import 'package:flutter/material.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
