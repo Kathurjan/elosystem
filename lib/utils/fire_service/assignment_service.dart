@@ -56,8 +56,8 @@ class AssignmentService {
           .collection('submissions')
           .doc(studentId)
           .set({
+        'studentId': studentId,
         'githubLink': githubLink,
-        // field to track if points have been assigned.
         'pointsAssigned': false,
       });
       print('Assignment submitted successfully.');
@@ -66,6 +66,7 @@ class AssignmentService {
       throw error;
     }
   }
+
 
   // get all assignments for the students.
   Future<List<Map<String, dynamic>>> getAvailableAssignments() async {
