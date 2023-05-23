@@ -1,7 +1,7 @@
+import 'package:elosystem/DTO/questionaireDTO.dart';
 import 'package:elosystem/screens/quizScreens/quizSelection.dart';
 import 'package:elosystem/screens/scoreScreens/scorescreen.dart';
 import 'package:elosystem/screens/loginScreens/signin_screen.dart';
-import 'package:elosystem/screens/statsScreens/stats_screen.dart';
 import 'package:flutter/cupertino.dart';
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
-import '../utils/slideAnimation.dart';
 import 'assignmentScreens/student/listOfAssigment_student.dart';
 
 
@@ -149,9 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           RoutingButton("Quiz", context, () async {
                             Navigator.push(
                               context,
-                              SlideAnimationRoute(
-                                child: const QuizSelection(),
-                                slideRight: true,
+                              MaterialPageRoute(
+                                builder: (context) => QuizSelection(),
                               ),
                             );
                           }),
@@ -161,15 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ScoreScreen(),
-                              ),
-                            );
-                          }),
-                          const SizedBox(width: 10.0, height: 10.0),
-                          RoutingButton("Stats", context, () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StatsScreen(),
                               ),
                             );
                           }),

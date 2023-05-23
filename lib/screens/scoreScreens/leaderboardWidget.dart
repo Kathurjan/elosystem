@@ -9,9 +9,10 @@ import '../../utils/slideAnimation.dart';
 
 class LeaderboardWidget extends StatelessWidget {
   final List<Map<String, dynamic>> leaderboards;
-  final String loggedInUserName; // Name of the logged-in user
+  final String loggedInUserName;
+  final String userType;
 
-  const LeaderboardWidget({Key? key, required this.leaderboards, required this.loggedInUserName})
+  const LeaderboardWidget({Key? key, required this.leaderboards, required this.loggedInUserName, required this.userType})
       : super(key: key);
 
   @override
@@ -41,13 +42,14 @@ class LeaderboardWidget extends StatelessWidget {
           textColor = Colors.black;
         }
 
-        String displayedName = leaderboardName; // Name to display
+        String displayedName = leaderboardName;
 
-        // Check if the user is not the logged-in user
-        if (leaderboardName != loggedInUserName) {
-          // Replace the name with an anonymous or random name
-          displayedName = generateAnonymousName(); // Replace this with your logic to generate anonymous or random names
+        if (userType == 'student') {
+          if (leaderboardName != loggedInUserName) {
+            displayedName = generateAnonymousName();
+          }
         }
+
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

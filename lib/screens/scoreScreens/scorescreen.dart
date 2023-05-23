@@ -19,12 +19,14 @@ class _ScoreScreenState extends State<ScoreScreen> {
   final AuthService authService = AuthService.instance();
   List<Map<String, dynamic>> leaderboards = [];
   String loggedInUserName = '';
+  String userTypes = '';
 
   @override
   void initState() {
     super.initState();
     loadLeaderboard();
     loadLoggedInUserName();
+    loadUserType();
   }
 
   Future<void> loadLoggedInUserName() async {
@@ -35,10 +37,24 @@ class _ScoreScreenState extends State<ScoreScreen> {
   }
 
   Future<void> loadLeaderboard() async {
-    leaderboards = await authService.getScore();
-    leaderboards.sort((a, b) => b['score'].compareTo(a['score']));
-    setState(() {});
+      leaderboards = await authService.getScore();
+      leaderboards.sort((a, b) => b['score'].compareTo(a['score']));
+      setState(() {});
   }
+
+  Future<void> loadUserType() async {
+    try {
+      final userType = await authService.getUserType();
+      print('User Type: $userType'); // Add this line to check the value of userType
+      setState(() {
+        userTypes = userType;
+      });
+    } catch (e) {
+      print('Error retrieving user type: $e');
+    }
+  }
+
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +75,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
         ),
         child: loggedInUserName.isEmpty
             ? const CircularProgressIndicator() // Show a loading indicator while fetching the user name
-            : LeaderboardWidget(leaderboards: leaderboards, loggedInUserName: loggedInUserName),
+            : LeaderboardWidget(leaderboards: leaderboards, loggedInUserName: loggedInUserName, userType: userTypes),
       ),
     );
   }
