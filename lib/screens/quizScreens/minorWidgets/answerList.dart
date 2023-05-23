@@ -1,47 +1,31 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../providerClasses/questionCreationState.dart';
 
-import 'answerDialog.dart';
 
 class AnswerList extends StatefulWidget {
-  final List<Map<String, bool>> answers;
+  final QuestionCreationState state;
 
-  AnswerList({Key? key, required this.answers}) : super(key: key);
+  AnswerList({Key? key, required this.state}) : super(key: key);
 
   @override
   _AnswerListState createState() => _AnswerListState();
 }
 
 class _AnswerListState extends State<AnswerList> {
-  void _showEditAnswerDialog(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AnswerDialog(
-          initialKey: widget.answers[index].keys.first,
-          onSaved: (newValue) {
-            setState(() {
-              bool value =
-                  widget.answers[index][widget.answers[index].keys.first]!;
-              widget.answers[index].remove(widget.answers[index].keys.first);
-              widget.answers[index][newValue] = value;
-            });
-          },
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+
         return Expanded(
           child: ListView.builder(
             physics: ClampingScrollPhysics(),
             padding: EdgeInsets.zero,
             shrinkWrap: true,
-            itemCount: widget.answers.isNotEmpty ? widget.answers.length : 1,
+            itemCount: widget.state.answers.isNotEmpty ? widget.state.answers.length : 1,
             itemBuilder: (BuildContext context, int index) {
-              if (widget.answers.isEmpty) {
+              if (widget.state.answers.isEmpty) {
                 return Container(
                   child: Center(
                     child: Padding(
@@ -55,8 +39,6 @@ class _AnswerListState extends State<AnswerList> {
                   ),
                 );
               } else {
-                final answerText = widget.answers[index].keys.first ?? '';
-                final trueFalseCheck = widget.answers[index].values.first;
                 return Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
@@ -64,26 +46,24 @@ class _AnswerListState extends State<AnswerList> {
                   ),
                   child: ListTile(
                     tileColor: Colors.green,
-                    title: Text(answerText),
+                    title: Text(widget.state.answers[index].keys.first),
                     trailing: Container(
                       width: 100,
                       child: Row(
                         children: [
-                          if (trueFalseCheck == true)
+                          if (widget.state.answers[index].values.first == true)
                             Container(child: Icon(Icons.check_sharp))
                           else
                             Container(child: Icon(Icons.close)),
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                              setState(() {
-                                widget.answers.removeAt(index);
-                              });
+                              widget.state.answers.removeAt(index);
                             },
                           ),
                           GestureDetector(
                             onTap: () {
-                              _showEditAnswerDialog(context, index);
+                              widget.state.editAnswer(context, index);
                             },
                             child: Icon(
                               Icons.edit,
