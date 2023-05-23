@@ -1,5 +1,3 @@
-// assignmentSubmission.dart
-
 import 'package:flutter/material.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
@@ -32,7 +30,17 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
         title: Text(widget.assignment['name']),
         backgroundColor: hexStringToColor("fdbb2d"),
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              hexStringToColor("fdbb2d"),
+              hexStringToColor("22c1c3"),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,6 +96,7 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
         );
 
         // show a dialog to indicate successful submission
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -110,6 +119,7 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
           ),
         );
       } catch (error) {
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -133,6 +143,7 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
         );
       }
     } else {
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
