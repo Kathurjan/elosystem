@@ -10,7 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import 'assignmentScreens/student/listOfAssigment_student.dart';
-import 'assignmentScreens/teacher/assignment_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   AuthService authService = AuthService.instance();
-  Questionaire questionaire = new Questionaire(quizQuestion: [QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}]), QuizQuestion(question: "question", answers: [{"answer": false}])]);
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
 import 'dart:core';
@@ -50,18 +49,31 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
     }
   }
 
-  Future<void> assignPoints(
-      String assignmentId, String studentId, int points) async {
+  Future<void> assignPoints(String assignmentId, String studentId, int points) async {
     try {
       await _assignmentService.assignPointsToStudent(studentId, points);
-      // used for some logic so we can disable the button or change the color of the students name
-      await _assignmentService.updatePointsAssignedStatus(
-          assignmentId, studentId, true);
+      await _assignmentService.updatePointsAssignedStatus(assignmentId, studentId, true);
+
+      await Future.microtask(() {
+        setState(() {
+          final submissions = submissionsMap[assignmentId];
+          if (submissions != null) {
+            for (final submission in submissions) {
+              if (submission['studentId'] == studentId) {
+                submission['pointsAssigned'] = true;
+                break;
+              }
+            }
+          }
+        });
+      });
+
       pointsFieldController.clear();
     } catch (error) {
       print('Error assigning points: $error');
     }
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(

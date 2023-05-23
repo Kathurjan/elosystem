@@ -143,3 +143,66 @@ ReturnButton(String text, BuildContext context, Function onTap) {
       },
       child: Text("$text"));
 }
+
+QuizTextFields(TextEditingController controller, String hintText, String labelText){
+  return TextField(
+    controller: controller,
+    style: TextStyle(
+      color: Colors.black.withAlpha(200),
+    ),
+    enabled: true,
+    decoration: InputDecoration(
+      prefixIcon: const Icon(
+        Icons.help_outline,
+        color: Colors.black,
+      ),
+      labelText: labelText,
+      labelStyle: TextStyle(
+          fontWeight: FontWeight.bold),
+      hintText: hintText,
+      filled: true,
+      floatingLabelBehavior:
+      FloatingLabelBehavior.always,
+      fillColor:
+      Colors.white.withAlpha(50),
+      border: OutlineInputBorder(
+        borderRadius:
+        BorderRadius.circular(30.0),
+        borderSide: const BorderSide(
+            width: 0,
+            style: BorderStyle.solid),
+      ),
+    ),
+  );
+}
+
+final ButtonStyle QuizButtonStyle = ButtonStyle(
+
+    backgroundColor: MaterialStateProperty
+        .resolveWith<Color>(
+          (Set<MaterialState> states) {
+        if (states
+            .contains(MaterialState.disabled)) {
+          return Colors.grey; // Disabled color
+        }
+        return Colors.orange; // Default color
+      },
+    ),
+    textStyle:
+    MaterialStateProperty.all<TextStyle>(
+      TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold),
+    ),
+    shape: MaterialStateProperty.all<
+        OutlinedBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+    ),
+    padding: MaterialStateProperty.all<
+        EdgeInsetsGeometry>(
+      EdgeInsets.symmetric(
+          vertical: 12, horizontal: 24),
+    ),
+  );

@@ -32,7 +32,8 @@ class _QuestionListState extends State<QuestionList> {
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: Text(
                     'No answers added',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black,
+                    fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
