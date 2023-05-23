@@ -6,11 +6,11 @@ import '../../utils/fire_service/assignment_service.dart';
 class StudentDataScreen extends StatelessWidget {
   final String studentId;
 
-  StudentDataScreen({required this.studentId});
+  const StudentDataScreen({super.key, required this.studentId});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _pointsController = TextEditingController();
+    final TextEditingController pointsController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +48,7 @@ class StudentDataScreen extends StatelessWidget {
                     subtitle: Text(data['score'].toString()),
                   ),
                   TextField(
-                    controller: _pointsController,
+                    controller: pointsController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: 'Points',
@@ -56,7 +56,7 @@ class StudentDataScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      int points = int.tryParse(_pointsController.text) ?? 0;
+                      int points = int.tryParse(pointsController.text) ?? 0;
                       await AssignmentService.instance().assignPointsToStudent(studentId, points);
                     },
                     style: ButtonStyle(
