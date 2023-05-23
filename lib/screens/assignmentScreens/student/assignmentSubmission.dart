@@ -61,7 +61,10 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
             TextField(
               controller: _gitRepoLinkController,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(35)),
+
+                ),
                 hintText: 'Enter Git Repository Link',
                 filled: true,
                 fillColor: Colors.white,
