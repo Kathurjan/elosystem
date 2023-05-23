@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../providerClasses/questionCreationState.dart';
+import '../questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
 
 
 class AnswerList extends StatefulWidget {
@@ -63,7 +63,7 @@ class _AnswerListState extends State<AnswerList> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              widget.state.editAnswer(context, index);
+                              widget.state.changeAnswerDialog(context, index);
                             },
                             child: Icon(
                               Icons.edit,

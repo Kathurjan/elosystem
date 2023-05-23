@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
+import 'assignmentProviders/assignmentSubmissionProvider.dart';
 import 'assignmentSubmission.dart';
 
 class ListOfAssignmentStudent extends StatefulWidget {
   const ListOfAssignmentStudent({Key? key}) : super(key: key);
 
   @override
-  State<ListOfAssignmentStudent> createState() => _ListOfAssignmentStudentState();
+  State<ListOfAssignmentStudent> createState() =>
+      _ListOfAssignmentStudentState();
 }
 
 class _ListOfAssignmentStudentState extends State<ListOfAssignmentStudent> {
-  final AssignmentService _assignmentService = AssignmentService.instance();
-  List<Map<String, dynamic>> assignments = [];
-
   @override
   void initState() {
     super.initState();
-    loadAvailableAssignments();
-  }
-
-  Future<void> loadAvailableAssignments() async {
-    assignments = await _assignmentService.getAvailableAssignments();
-    setState(() {});
+    Provider.of<ListOfAssignmentProvider>(context, listen: false)
+        .loadAvailableAssignments();
   }
 
   @override
@@ -43,45 +40,53 @@ class _ListOfAssignmentStudentState extends State<ListOfAssignmentStudent> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: ListView.builder(
-          itemCount: assignments.length,
-          itemBuilder: (context, index) {
-            final assignment = assignments[index];
-            final assignmentId = assignment['id'];
-            final assignmentName = assignment['name'];
-            final daysLeft = assignment['daysLeft'];
+        child: Consumer<ListOfAssignmentProvider>(
+          builder: (context, provider, _) {
+            if (provider.assignments.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return ListView.builder(
+                itemCount: provider.assignments.length,
+                itemBuilder: (context, index) {
+                  final assignment = provider.assignments[index];
+                  final assignmentId = assignment['id'];
+                  final assignmentName = assignment['name'];
+                  final daysLeft = assignment['daysLeft'];
 
-            return Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 2.0,
-              child: ListTile(
-                title: Text(
-                  assignmentName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  '$daysLeft days left',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                onTap: () {
-                  // navigate to the AssignmentSubmission screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AssignmentSubmission(
-                        // passing the assignmentId and assignment data to the assignmentSubmission screen
-                        assignmentId: assignmentId,
-                        assignment: assignment,
+                  return Card(
+                    margin: const EdgeInsets.all(10.0),
+                    elevation: 2.0,
+                    child: ListTile(
+                      title: Text(
+                        assignmentName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      subtitle: Text(
+                        '$daysLeft days left',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                                create: (_) => AssignmentSubmissionProvider(),
+                                child: AssignmentSubmission(
+                                  assignmentId: assignmentId,
+                                  assignment: assignment,
+                                )),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
-              ),
-            );
+              );
+            }
           },
         ),
       ),

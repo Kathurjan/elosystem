@@ -1,11 +1,9 @@
-import 'package:elosystem/screens/home_screen.dart';
-import 'package:elosystem/screens/teacher_screen.dart';
+import 'package:elosystem/screens/scoreScreens/scoreboardProviders/scoreboardProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../reusable_widgets/resuable_widgets.dart';
+import 'package:provider/provider.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/fire_service/auth_service.dart';
-import '../../utils/slideAnimation.dart';
 import 'leaderboardWidget.dart';
 
 class ScoreScreen extends StatefulWidget {
@@ -16,52 +14,56 @@ class ScoreScreen extends StatefulWidget {
 }
 
 class _ScoreScreenState extends State<ScoreScreen> {
-  final AuthService authService = AuthService.instance();
-  List<Map<String, dynamic>> leaderboards = [];
-  String loggedInUserName = '';
+  late ScoreScreenProvider scoreScreenProvider;
 
   @override
   void initState() {
     super.initState();
-    loadLeaderboard();
-    loadLoggedInUserName();
+    scoreScreenProvider = ScoreScreenProvider();
+    scoreScreenProvider.loadLeaderboard();
+    scoreScreenProvider.loadLoggedInUserName();
   }
 
-  Future<void> loadLoggedInUserName() async {
-    final userName = await authService.getCurrentUserName();
-    setState(() {
-      loggedInUserName = userName;
-    });
-  }
-
-  Future<void> loadLeaderboard() async {
-    leaderboards = await authService.getScore();
-    leaderboards.sort((a, b) => b['score'].compareTo(a['score']));
-    setState(() {});
-  }
-
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Leaderboard'),
-        backgroundColor: hexStringToColor("fdbb2d"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              hexStringToColor("fdbb2d"),
-              hexStringToColor("22c1c3"),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+    return ChangeNotifierProvider<ScoreScreenProvider>(
+        create: (context) => scoreScreenProvider,
+
+    child: Consumer<ScoreScreenProvider>(builder: (context, state, _) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Leaderboard'),
+          backgroundColor: hexStringToColor("fdbb2d"),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                hexStringToColor("fdbb2d"),
+                hexStringToColor("22c1c3"),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: FutureBuilder(
+            future: state.loggedInUserName,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return const Text('Error loading user name');
+              } else {
+                return LeaderboardWidget(
+                  leaderboards: state.leaderboards,
+                  loggedInUserName: snapshot.data.toString(),
+                );
+              }
+            },
           ),
         ),
-        child: loggedInUserName.isEmpty
-            ? const CircularProgressIndicator() // Show a loading indicator while fetching the user name
-            : LeaderboardWidget(leaderboards: leaderboards, loggedInUserName: loggedInUserName),
-      ),
-    );
+      );
+    }));
+
   }
 }
-

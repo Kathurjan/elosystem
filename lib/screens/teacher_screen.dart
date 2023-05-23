@@ -1,4 +1,7 @@
-import 'package:elosystem/screens/quizScreens/QuestionaireListScreen.dart';
+import 'package:elosystem/screens/assignmentScreens/teacher/teachAssignmentProviders/teacherAssignmentProvider.dart';
+import 'package:elosystem/screens/quizScreens/questionnaireListScreen.dart';
+import 'package:elosystem/screens/quizScreens/questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
+import 'package:elosystem/screens/scoreScreens/scoreboardProviders/scoreboardProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
@@ -112,7 +115,10 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AssignmentScreen(),
+                                builder: (context) => ChangeNotifierProvider(
+                                  create: (_) => TeacherAssignmentProvider(),
+                                  child: AssignmentScreen(),
+                                ),
                               ),
                             );
                           }),
@@ -133,7 +139,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ScoreScreen(),
+                                builder: (context) => ScoreScreen()
                               ),
                             );
                           }),

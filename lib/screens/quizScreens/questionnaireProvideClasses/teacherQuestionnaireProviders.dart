@@ -21,7 +21,29 @@ class QuestionCreationState extends ChangeNotifier {
     answers = questionnaire.quizQuestion[0].answers;
   }
 
-  void editQuestionCall(int newIndex, context) {
+  void changeQuestion(int newIndex){
+    // set's all the value's to the selected question
+    questionController.text = questionnaire.quizQuestion[newIndex].question;
+    answers = questionnaire.quizQuestion[newIndex].answers;
+    questionEditIndex = newIndex;
+  }
+
+  void onQuestionChangeCall(int newIndex, context) {
+    // If there are currently answer's in the list we open a dialog to info the user
+    if (answers.isNotEmpty) {
+      changeQuestionDialog(newIndex, context);
+    } else {
+      changeQuestion(newIndex);
+      notifyListeners();
+    }
+  }
+
+  void removeQuestion(int index) {
+    questionnaire.quizQuestion.removeAt(index);
+    notifyListeners();
+  }
+
+  void changeQuestionDialog(int newIndex, context) {
     // Checks and dialog pop up to prevent missclicks
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
@@ -33,23 +55,18 @@ class QuestionCreationState extends ChangeNotifier {
               actions: <Widget>[
                 TextButton(
                     onPressed: () {
-                      questionController.text =
-                          questionnaire.quizQuestion[newIndex].question;
-                      answers = questionnaire.quizQuestion[newIndex].answers;
-                      questionEditIndex = newIndex;
+                      questionCreation(context); // Saves the current question
+
+                      changeQuestion(newIndex);
 
                       Navigator.of(context).pop();
-                      questionCreation(context);
                       notifyListeners();
                     },
                     child: Text("Yes")),
                 TextButton(
                     onPressed: () {
-                      questionController.text =
-                          questionnaire.quizQuestion[newIndex].question;
-                      answers = questionnaire.quizQuestion[newIndex].answers;
-                      questionController.clear();
-                      questionEditIndex = newIndex;
+
+                      changeQuestion(newIndex);
 
                       Navigator.of(context).pop();
                       notifyListeners();
@@ -66,12 +83,62 @@ class QuestionCreationState extends ChangeNotifier {
     });
   }
 
+  void questionCreation(BuildContext context) {
+    // The method for creating questions based on the answer list
+
+    // Check for a correct answer within the list
+    bool hasCorrectAnswer = answers.any((answer) => answer.values.first == true);
+
+
+    if (hasCorrectAnswer == true) {
+      final quizAnswers = answers.map((answer) {
+        final answerText = answer.keys.first;
+        final answerValue = answer.values.first == true;
+        return <String, bool>{answerText: answerValue};
+      }).toList();
+
+
+      final quizQuestion = QuizQuestion(
+        question: questionController.text,
+        answers: quizAnswers,
+      );
+
+      // if we are editing a question we remove it and re add it to the list
+      if (questionEditIndex >= 0) {
+        questionnaire.quizQuestion.removeAt(questionEditIndex);
+        questionEditIndex = -1;
+      }
+
+      questionnaire.quizQuestion.add(quizQuestion);
+      questionController.clear();
+      answers.clear();
+      notifyListeners();
+    }
+
+    else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Warning"),
+              content: Text("You need atleast one correct answer"),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("cancel"))
+              ],
+            );
+          });
+    }
+  }
+
   finishQuestionnaire(context, String? uId) {
     if (questionnaire.quizQuestion.length >= 1) {
       showDialog(
           context: context,
           builder: (context) {
-            String tempname = "";
             return AlertDialog(
               title: Text("Add a name to your questionnaire"),
               content: QuizTextFields(
@@ -79,16 +146,20 @@ class QuestionCreationState extends ChangeNotifier {
               actions: [
                 TextButton(
                     onPressed: () async {
-                      if (questionController.text.isNotEmpty) {
-                        tempname = questionController.text;
-                        questionnaire.name = tempname;
-                        if (uId == null) {
+                      if (questionController.text.isNotEmpty)
+                      {
+                        questionnaire.name = questionController.text;
+
+                        if (uId == null) { //save the questionnaire as a new one if not in editmode
                           await QuestionnaireService()
                               .addQuestionaire(questionnaire);
-                        } else {
+                        }
+                        else
+                        { // change the old Questionnaire
                           await QuestionnaireService()
                               .setQuestionaire(questionnaire, uId);
                         }
+
                         Navigator.of(context).pop();
                         Navigator.pop(context);
                       } else {
@@ -135,68 +206,17 @@ class QuestionCreationState extends ChangeNotifier {
     }
   }
 
-  void questionCreation(BuildContext context) {
-    // The method for creating questions based on the answer list
-    num correctAnswers = 0;
-    for (Map<String, bool> answer in answers) {
-      if (answer.values.first == true) {
-        correctAnswers++;
-      }
-    }
-    if (correctAnswers >= 1) {
-      final quizAnswers = answers.map((answer) {
-        final answerText = answer.keys.first;
-        final answerValue = answer.values.first == true;
-        return <String, bool>{answerText: answerValue};
-      }).toList();
-      final quizQuestion = QuizQuestion(
-        question: questionController.text,
-        answers: quizAnswers,
-      );
-      if (questionEditIndex >= 0) {
-        questionnaire.quizQuestion.removeAt(questionEditIndex);
-        questionEditIndex = -1;
-      }
-      questionnaire.quizQuestion.add(quizQuestion);
-      questionController.clear();
-      answers.clear();
-      notifyListeners();
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("Warning"),
-              content: Text("You need atleast one correct answer"),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("cancel"))
-              ],
-            );
-          });
-    }
-  }
 
-  void onChangedCall(int newIndex, context) {
-    if (questionController.text.isNotEmpty && answers.isNotEmpty) {
-      editQuestionCall(newIndex, context);
-    } else {
-      questionController.text = questionnaire.quizQuestion[newIndex].question;
-      answers = questionnaire.quizQuestion[newIndex].answers;
-      questionEditIndex = newIndex;
-      notifyListeners();
-    }
-  }
+
 
   void addAnswer() {
+    // simply add the answer to the list
     answers.add({answerController.text: dropdownValue});
     notifyListeners();
   }
 
-  void editAnswer(BuildContext context, int index) {
+  void changeAnswerDialog(BuildContext context, int index) {
+    // open a dialog to allow for the answer to be edited (only text)
     tempController.text = answers[index].keys.first;
     showDialog(
       context: context,
@@ -241,11 +261,20 @@ class QuestionCreationState extends ChangeNotifier {
       dropdownValue = newValue;
       notifyListeners();
     }}
+}
 
-  void questionRemoved(int index) {
-    questionnaire.quizQuestion.removeAt(index);
+class QuestionnaireListState with ChangeNotifier {
+  List<Map<String, String>> listOfQuestionnaires = [];
+
+  Future<void> fetchQuestionnaires() async {
+    final questionnaires = await QuestionnaireService().getQuestionaireList();
+    listOfQuestionnaires = questionnaires;
     notifyListeners();
   }
 
-
+  void removeQuestionnaire(String questionnaireId) {
+    QuestionnaireService().removeQuestionnaire(questionnaireId);
+    listOfQuestionnaires.removeWhere((map) => map.containsKey(questionnaireId));
+    notifyListeners();
+  }
 }

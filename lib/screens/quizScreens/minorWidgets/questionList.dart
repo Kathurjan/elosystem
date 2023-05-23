@@ -1,7 +1,6 @@
-import 'package:elosystem/DTO/questionaireDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../providerClasses/questionCreationState.dart';
+import '../questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
 
 class QuestionList extends StatefulWidget {
   final QuestionCreationState state;
@@ -53,13 +52,13 @@ class _QuestionListState extends State<QuestionList> {
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          widget.state.questionRemoved(index);
+                          widget.state.removeQuestion(index);
 
                         },
                       ),
                       GestureDetector(
                         onTap: () {
-                          widget.state.onChangedCall(index, context);
+                          widget.state.onQuestionChangeCall(index, context);
                         },
                         child: Icon(
                           Icons.edit,
