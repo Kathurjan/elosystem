@@ -26,34 +26,46 @@ class StudentDataScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             var data = snapshot.data!.data() as Map<String, dynamic>;
-            return Column(
-              children: [
-                ListTile(
-                  title: const Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text(data['userName']),
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    hexStringToColor("fdbb2d"),
+                    hexStringToColor("22c1c3"),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                ListTile(
-                  title: const Text('Score', style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text(data['score'].toString()),
-                ),
-                TextField(
-                  controller: _pointsController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Points',
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: const Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(data['userName']),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    int points = int.tryParse(_pointsController.text) ?? 0;
-                    await AssignmentService.instance().assignPointsToStudent(studentId, points);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(hexStringToColor("fdbb2d")),
+                  ListTile(
+                    title: const Text('Score', style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(data['score'].toString()),
                   ),
-                  child: const Text('Add Points', style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ],
+                  TextField(
+                    controller: _pointsController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Points',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      int points = int.tryParse(_pointsController.text) ?? 0;
+                      await AssignmentService.instance().assignPointsToStudent(studentId, points);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(hexStringToColor("fdbb2d")),
+                    ),
+                    child: const Text('Add Points', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
             );
           }
         },
