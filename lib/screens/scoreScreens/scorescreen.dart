@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/color_utils.dart';
-import '../../utils/fire_service/auth_service.dart';
 import 'leaderboardWidget.dart';
 
 class ScoreScreen extends StatefulWidget {
@@ -28,7 +27,6 @@ class _ScoreScreenState extends State<ScoreScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ScoreScreenProvider>(
         create: (context) => scoreScreenProvider,
-
     child: Consumer<ScoreScreenProvider>(builder: (context, state, _) {
       return Scaffold(
         appBar: AppBar(
@@ -46,24 +44,12 @@ class _ScoreScreenState extends State<ScoreScreen> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: FutureBuilder(
-            future: state.loggedInUserName,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return const Text('Error loading user name');
-              } else {
-                return LeaderboardWidget(
-                  leaderboards: state.leaderboards,
-                  loggedInUserName: snapshot.data.toString(),
-                );
+          child: state.loggedInUserName.isEmpty
+            ? const CircularProgressIndicator() // Show a loading indicator while fetching the user name
+              : LeaderboardWidget(leaderboards: state.leaderboards, loggedInUserName: state.loggedInUserName, userType: state.userTypes),
+                ));
               }
-            },
           ),
-        ),
-      );
-    }));
-
+        );
   }
 }

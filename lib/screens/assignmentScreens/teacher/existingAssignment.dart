@@ -2,7 +2,6 @@ import 'package:clipboard/clipboard.dart';
 import 'package:elosystem/screens/assignmentScreens/teacher/teachAssignmentProviders/teacherAssignmentProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/color_utils.dart';
 import '../../../utils/fire_service/assignment_service.dart';
 
@@ -23,6 +22,7 @@ class _ExistingAssignmentState extends State<ExistingAssignment> {
     super.initState();
     Provider.of<ExistingAssignmentProvider>(context, listen: false).loadAssignments();
   }
+
 
   @override
   Widget build(BuildContext context) {
