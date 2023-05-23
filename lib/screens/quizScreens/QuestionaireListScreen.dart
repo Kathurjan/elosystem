@@ -8,21 +8,6 @@ import 'package:provider/provider.dart';
 import '../../utils/fire_service/auth_service.dart';
 import '../../utils/color_utils.dart';
 
-
-class QuestionnaireListProvider extends StatelessWidget {
-  final Widget child;
-
-  const QuestionnaireListProvider({required this.child, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => QuestionnaireListState(),
-      child: child,
-    );
-  }
-}
-
 class QuestionnaireListScreen extends StatefulWidget {
   const QuestionnaireListScreen({Key? key}) : super(key: key);
 
@@ -31,6 +16,7 @@ class QuestionnaireListScreen extends StatefulWidget {
 }
 
 class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +65,6 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else {
-                final questionnaireListState = Provider.of<QuestionnaireListState>(context);
                 return Consumer<QuestionnaireListState>(
                   builder: (context, state, _) {
                     return Column(
@@ -121,7 +106,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                               style: BorderStyle.solid,
                             ),
                           ),
-                          height: 600,
+                          height: 500,
                           child: ListView.builder(
                             itemCount: state.listOfQuestionnaires.isNotEmpty ? state.listOfQuestionnaires.length : 1,
                             itemBuilder: (BuildContext context, int index) {
@@ -161,7 +146,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                                       ),
                                     ),
                                     trailing: Container(
-                                      width: 200,
+                                      width: 150,
                                       child: Row(
                                         children: [
                                           IconButton(
@@ -187,9 +172,11 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => QuizCreation(
-                                                    editUId: state.listOfQuestionnaires[index].keys.first,
-                                                  ),
+                                                  builder: (context) => ChangeNotifierProvider(
+                                                    create: (_) => QuestionCreationState(),
+                                                    child: QuizCreation(),
+
+                                                  )
                                                 ),
                                               );
                                             },
