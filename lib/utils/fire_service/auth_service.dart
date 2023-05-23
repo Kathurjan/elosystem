@@ -140,12 +140,16 @@ class AuthService {
         if (studentSnapshot.exists) {
           String userName = studentSnapshot.get('userName') as String;
           int score = studentSnapshot.get('score') as int;
+          String userType = studentSnapshot.get('userType') as String;
           print('Student name: $userName');
 
-          scoreData['userName'] = userName;
-          scoreData['score'] = score;
+          if(userType == 'student') {
+            scoreData['userName'] = userName;
+            scoreData['score'] = score;
+            scoreData['userType'] = userType;
 
-          leaderboard.add(scoreData);
+            leaderboard.add(scoreData);
+          }
         } else {
           print('Student snapshot does not exist');
         }
