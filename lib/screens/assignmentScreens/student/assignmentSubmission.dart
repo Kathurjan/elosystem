@@ -62,6 +62,10 @@ class _AssignmentSubmissionState extends State<AssignmentSubmission> {
               controller: _gitRepoLinkController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
+                hintText: 'Enter Git Repository Link',
+                filled: true,
+                fillColor: Colors.white,
+
               ),
             ),
             const SizedBox(height: 16),
