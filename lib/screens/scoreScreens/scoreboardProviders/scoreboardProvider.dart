@@ -5,10 +5,12 @@ import '../../../utils/fire_service/auth_service.dart';
 class ScoreScreenProvider with ChangeNotifier {
   final AuthService _authService = AuthService.instance();
   List<Map<String, dynamic>> leaderboards = [];
-  late Future<String> loggedInUserName;
+  String loggedInUserName = "";
+  String userTypes = "";
 
   Future<void> loadLoggedInUserName() async {
-    loggedInUserName = _authService.getCurrentUserName();
+    final username = _authService.getCurrentUserName() as String;
+    loggedInUserName = username;
     notifyListeners();
   }
 
@@ -16,5 +18,16 @@ class ScoreScreenProvider with ChangeNotifier {
     leaderboards = await _authService.getScore();
     leaderboards.sort((a, b) => b['score'].compareTo(a['score']));
     notifyListeners();
+  }
+
+
+  Future<void> loadUserType() async {
+    try {
+      final userType = await _authService.getUserType();
+      userTypes = userType;
+      notifyListeners();
+    } catch (e) {
+      print('Error retrieving user type: $e');
+    }
   }
 }

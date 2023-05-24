@@ -44,7 +44,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: state.loggedInUserName.isEmpty
+          child: state.leaderboards.isEmpty
             ? const CircularProgressIndicator() // Show a loading indicator while fetching the user name
               : LeaderboardWidget(leaderboards: state.leaderboards, loggedInUserName: state.loggedInUserName, userType: state.userTypes),
                 ));
