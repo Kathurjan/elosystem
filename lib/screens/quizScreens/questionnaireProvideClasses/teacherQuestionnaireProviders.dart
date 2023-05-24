@@ -1,8 +1,10 @@
+import 'package:elosystem/screens/quizScreens/questionnaireCreationScreen.dart';
 import 'package:flutter/material.dart';
 import '../../../DTO/questionaireDTO.dart';
 import '../../../reusable_widgets/resuable_widgets.dart';
 import '../../../utils/fire_service/auth_service.dart';
 import '../../../utils/fire_service/questionairService.dart';
+import '../../../utils/slideAnimation.dart';
 
 class QuestionCreationState extends ChangeNotifier {
   AuthService authService = AuthService.instance();
@@ -15,6 +17,8 @@ class QuestionCreationState extends ChangeNotifier {
   final TextEditingController answerController = TextEditingController();
   final TextEditingController questionnaireController = TextEditingController();
   final TextEditingController tempController = TextEditingController();
+
+
 
   Future<void> fetchQuestainnaireEdit(String uId) async {
     questionnaire = await QuestionnaireService().getQuestionnaire(uId);
@@ -261,6 +265,12 @@ class QuestionCreationState extends ChangeNotifier {
       dropdownValue = newValue;
       notifyListeners();
     }}
+
+  QuestionCreationState(String? uId){
+    if(uId != null){
+      fetchQuestainnaireEdit(uId);
+    }
+  }
 }
 
 class QuestionnaireListState with ChangeNotifier {
@@ -276,5 +286,20 @@ class QuestionnaireListState with ChangeNotifier {
     QuestionnaireService().removeQuestionnaire(questionnaireId);
     listOfQuestionnaires.removeWhere((map) => map.containsKey(questionnaireId));
     notifyListeners();
+  }
+
+  void goToQuestionaireCreation(String? uId, BuildContext context){
+    Navigator.push(
+      context,
+      SlideAnimationRoute(
+        child: QuestionnaireCreationScreen(editUId: uId),
+        slideRight: true,
+      ),
+    );
+
+  }
+
+  QuestionnaireListState(){
+    fetchQuestionnaires();
   }
 }

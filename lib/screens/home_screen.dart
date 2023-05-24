@@ -1,3 +1,4 @@
+import 'package:elosystem/screens/assignmentScreens/teacher/assignment_screen.dart';
 import 'package:elosystem/screens/quizScreens/questionnaireProvideClasses/studentQuestionnaireProviders.dart';
 import 'package:elosystem/screens/quizScreens/questionnaireSelectionScreen.dart';
 import 'package:elosystem/screens/scoreScreens/scorescreen.dart';
@@ -141,9 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                    create: (_) => ListOfAssignmentProvider(),
-                                    child: ListOfAssignmentStudent()),
+                                builder: (context) => AssignmentScreen()
                               ),
                             );
                           }),
@@ -152,11 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ChangeNotifierProvider(
-                                          create: (context) => QuestionnaireSelectionProvider(),
-                                          child: QuestionnaireSelectionScreen(),
-                                        )));
+                                    builder: (context) => QuestionnaireSelectionScreen()));
                           }),
                           const SizedBox(width: 10.0, height: 10.0),
                           RoutingButton("Score", context, () async {

@@ -49,6 +49,12 @@ class QuestionnaireSelectionProvider with ChangeNotifier {
       );
     }
   }
+
+  QuestionnaireSelectionProvider(){
+    fetchDailyQuiz();
+    fetchWeeklyQuiz();
+
+  }
 }
 
 class QuestionnaireViewProvider with ChangeNotifier {

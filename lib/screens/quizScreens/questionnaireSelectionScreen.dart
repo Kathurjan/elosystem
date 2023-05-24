@@ -17,18 +17,11 @@ class QuestionnaireSelectionScreen extends StatefulWidget {
 
 
 class _QuestionnaireSelectionScreenState extends State<QuestionnaireSelectionScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-    final questionnaireSelectionState = Provider.of<QuestionnaireSelectionProvider>(context, listen: false);
-    questionnaireSelectionState.fetchDailyQuiz();
-    questionnaireSelectionState.fetchWeeklyQuiz();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<QuestionnaireSelectionProvider>(builder: (context, state, _) {
+    return ChangeNotifierProvider(
+      create: (context) => QuestionnaireSelectionProvider(),
+      child: Consumer<QuestionnaireSelectionProvider>(builder: (context, state, _) {
       return Scaffold(
           appBar: AppBar(
             title: Text('Home'),
@@ -100,7 +93,8 @@ class _QuestionnaireSelectionScreenState extends State<QuestionnaireSelectionScr
               )
           )
       );
-    });
+    })
+    );
 
 
 

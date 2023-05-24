@@ -81,4 +81,8 @@ class ExistingAssignmentProvider with ChangeNotifier {
       print('Error assigning points: $error');
     }
   }
+
+  ExistingAssignmentProvider(){
+    loadAssignments();
+  }
 }

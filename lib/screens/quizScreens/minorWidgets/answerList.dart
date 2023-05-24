@@ -17,7 +17,6 @@ class _AnswerListState extends State<AnswerList> {
 
   @override
   Widget build(BuildContext context) {
-
         return Expanded(
           child: ListView.builder(
             physics: ClampingScrollPhysics(),

@@ -115,10 +115,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (_) => TeacherAssignmentProvider(),
-                                  child: AssignmentScreen(),
-                                ),
+                                builder: (context) => AssignmentScreen()
                               ),
                             );
                           }),
@@ -127,10 +124,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (_) => QuestionnaireListState(),
-                                  child: QuestionnaireListScreen(),
-                                ),
+                                builder: (context) => QuestionnaireListScreen()
                               ),
                             );
                           }),

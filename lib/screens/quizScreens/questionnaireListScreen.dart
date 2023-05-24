@@ -1,11 +1,9 @@
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
 import 'package:elosystem/screens/quizScreens/questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
-import 'package:elosystem/screens/quizScreens/questionnaireCreationScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/fire_service/auth_service.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/fire_service/questionairService.dart';
 
@@ -13,22 +11,15 @@ class QuestionnaireListScreen extends StatefulWidget {
   const QuestionnaireListScreen({Key? key}) : super(key: key);
 
   @override
-  _QuestionnaireListScreenState createState() =>
-      _QuestionnaireListScreenState();
+  _QuestionnaireListScreenState createState() => _QuestionnaireListScreenState();
 }
 
 class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
   @override
-  void initState() {
-    super.initState();
-    final questionnaireListState =
-        Provider.of<QuestionnaireListState>(context, listen: false);
-    questionnaireListState.fetchQuestionnaires();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer<QuestionnaireListState>(builder: (context, state, _) {
+    return ChangeNotifierProvider(
+      create: (_) => QuestionnaireListState(),
+      child: Consumer<QuestionnaireListState>(builder: (context, state, _) {
       return Scaffold(
           appBar: AppBar(
             title: Text('Home'),
@@ -43,7 +34,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
           ),
           resizeToAvoidBottomInset: false,
           body: Container(
-              // Styling
+            // Styling
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -63,20 +54,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ChangeNotifierProvider(
-                                    create: (context) => QuestionCreationState(),
-                                    child: QuestionnaireCreationScreen(),
-                                  )
-                            ),
-                          ).then((value) {
-                            if (value == true) {
-                              state.fetchQuestionnaires();
-                            }
-                          });
+                          state.goToQuestionaireCreation(null, context);
                         },
                         style: QuizButtonStyle,
                         child: Text(
@@ -121,7 +99,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                               );
                             } else {
                               final name = state.listOfQuestionnaires[index]
-                                      .values.first ??
+                                  .values.first ??
                                   "";
                               return Container(
                                 decoration: BoxDecoration(
@@ -169,18 +147,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChangeNotifierProvider(
-                                                  create: (_) =>
-                                                      QuestionCreationState(),
-                                                  child:
-                                                      QuestionnaireCreationScreen(),
-                                                ),
-                                              ),
-                                            );
+                                            state.goToQuestionaireCreation(state.listOfQuestionnaires[index].values.first, context);
                                           },
                                           // IconButton properties
                                           icon: Icon(Icons.edit),
@@ -205,6 +172,8 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
                       ),
                     ],
                   ))));
-    });
+    })
+    );
+
   }
 }

@@ -99,4 +99,8 @@ class ListOfAssignmentProvider with ChangeNotifier {
     assignments = await _assignmentService.getAvailableAssignments();
     notifyListeners();
   }
+
+  ListOfAssignmentProvider(){
+    loadAvailableAssignments();
+  }
 }
