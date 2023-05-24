@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:elosystem/screens/quizScreens/questionnaireCreationScreen.dart';
 import 'package:flutter/material.dart';
 import '../../../DTO/questionaireDTO.dart';
@@ -273,14 +275,10 @@ class QuestionCreationState extends ChangeNotifier {
   }
 }
 
+///////////
 class QuestionnaireListState with ChangeNotifier {
   List<Map<String, String>> listOfQuestionnaires = [];
-
-  Future<void> fetchQuestionnaires() async {
-    final questionnaires = await QuestionnaireService().getQuestionaireList();
-    listOfQuestionnaires = questionnaires;
-    notifyListeners();
-  }
+  StreamController<List<Map<String, String>>> _questionnairesController = StreamController<List<Map<String, String>>>();
 
   void removeQuestionnaire(String questionnaireId) {
     QuestionnaireService().removeQuestionnaire(questionnaireId);
@@ -300,6 +298,19 @@ class QuestionnaireListState with ChangeNotifier {
   }
 
   QuestionnaireListState(){
-    fetchQuestionnaires();
+    subscribeToQuestionnaires();
+  }
+
+
+
+  Stream<List<Map<String, String>>> get questionnairesStream => _questionnairesController.stream;
+
+  Future<void> subscribeToQuestionnaires() async {
+    Stream<List<Map<String, String>>> stream = QuestionnaireService().streamQuestionnaireList();
+    stream.listen((questionnaires) {
+      listOfQuestionnaires = questionnaires;
+      _questionnairesController.add(questionnaires);
+      notifyListeners();
+    });
   }
 }

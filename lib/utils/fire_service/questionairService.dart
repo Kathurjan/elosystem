@@ -92,16 +92,14 @@ class QuestionnaireService {
     await questionnaireCollection.doc(uId).update({weekOrDay: true});
   }
 
-  Future<List<Map<String, String>>> getQuestionaireList() async {
-    List<Map<String, String>> questionaries = [];
-    await questionnaireCollection.get().then((querySnapshot) {
-      for (var doc in querySnapshot.docs) {
+  Stream<List<Map<String, String>>> streamQuestionnaireList() {
+    return questionnaireCollection.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
         String uId = doc["uId"];
         String name = doc["name"];
-        questionaries.add({uId: name});
-      }
+        return {uId: name};
+      }).toList();
     });
-    return questionaries;
   }
 
   Future<Map<String, String>> getWeeklyOrDaily(String weekOrDay) async {
@@ -179,5 +177,6 @@ class QuestionnaireService {
       throw ArgumentError("Something went wrong");
     }
   }
+
 
 }
