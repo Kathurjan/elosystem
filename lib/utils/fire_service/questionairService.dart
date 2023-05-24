@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 import '../../DTO/questionaireDTO.dart';
 
 class QuestionnaireService {
@@ -91,16 +92,14 @@ class QuestionnaireService {
     await questionnaireCollection.doc(uId).update({weekOrDay: true});
   }
 
-  Future<List<Map<String, String>>> getQuestionaireList() async {
-    List<Map<String, String>> questionaries = [];
-    await questionnaireCollection.get().then((querySnapshot) {
-      for (var doc in querySnapshot.docs) {
+  Stream<List<Map<String, String>>> streamQuestionnaireList() {
+    return questionnaireCollection.snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
         String uId = doc["uId"];
         String name = doc["name"];
-        questionaries.add({uId: name});
-      }
+        return {uId: name};
+      }).toList();
     });
-    return questionaries;
   }
 
   Future<Map<String, String>> getWeeklyOrDaily(String weekOrDay) async {
@@ -153,28 +152,31 @@ class QuestionnaireService {
     });
   }
 
-  Future<void> addScoreFromQuiz(String uId, num score, String type, String QuestionnaireID) async {
+  Future<void> addScoreFromQuiz(String uId, int score, String type, String QuestionnaireID) async {
     try {
-      final userDoc =
-          await FirebaseFirestore.instance.collection("users").doc(uId).get();
+      final userDoc = await FirebaseFirestore.instance.collection("users").doc(uId).get();
       final docData = userDoc.data();
       if (!userDoc.exists) {
-        throw ArgumentError("User doesnt exist?");
+        throw ArgumentError("User doesn't exist?");
       }
-      final quizTimeout = docData?["${type}QuizTimeout"] as Timestamp? ?? Timestamp.now();
+
+      final dynamic quizTimeoutData = docData?["${type}QuizTimeout"];
+      final Timestamp quizTimeout = quizTimeoutData is Timestamp ? quizTimeoutData : Timestamp.now();
+
       final quizTimeoutId = docData?["${type}QuizTimeoutID"] as String? ?? "";
       if (Timestamp.now().seconds > quizTimeout.seconds || quizTimeoutId == QuestionnaireID) {
         throw ArgumentError("You already completed this quiz or your timer is still running");
       }
       await FirebaseFirestore.instance.collection("users").doc(uId).update({
-        "${type}QuizTimeout": Timestamp.now().seconds,
+        "${type}QuizTimeout": Timestamp.now().seconds + 20,
         "${type}QuizTimeoutID": QuestionnaireID,
         "score": FieldValue.increment(score),
       });
     } catch (error) {
       print("Error: $error");
-
       throw ArgumentError("Something went wrong");
     }
   }
+
+
 }

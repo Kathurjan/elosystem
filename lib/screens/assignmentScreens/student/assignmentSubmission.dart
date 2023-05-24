@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/color_utils.dart';
-import '../../../utils/fire_service/assignment_service.dart';
-import '../../../utils/fire_service/auth_service.dart';
-import 'assignmentSubmission.dart';
+import 'assignmentProviders/assignmentSubmissionProvider.dart';
 
 class AssignmentSubmission extends StatefulWidget {
   final Map<String, dynamic> assignment;
@@ -20,153 +19,69 @@ class AssignmentSubmission extends StatefulWidget {
 
 class _AssignmentSubmissionState extends State<AssignmentSubmission> {
   final TextEditingController _gitRepoLinkController = TextEditingController();
-  final AssignmentService _assignmentService = AssignmentService.instance();
-  final AuthService _authService = AuthService.instance();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.assignment['name']),
-        backgroundColor: hexStringToColor("fdbb2d"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              hexStringToColor("fdbb2d"),
-              hexStringToColor("22c1c3"),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Assignment: ${widget.assignment['name']}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return ChangeNotifierProvider(
+        create: (_) => AssignmentSubmissionProvider(),
+        child: Consumer<AssignmentSubmissionProvider>(
+          builder: (context, provider, _) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(widget.assignment['name']),
+                backgroundColor: hexStringToColor("fdbb2d"),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Enter Git Repository Link:',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _gitRepoLinkController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter Git Repository Link',
-                filled: true,
-                fillColor: Colors.white,
+              body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      hexStringToColor("fdbb2d"),
+                      hexStringToColor("22c1c3"),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Assignment: ${widget.assignment['name']}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Enter Git Repository Link:',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _gitRepoLinkController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        provider.submitAssignment(widget.assignmentId,
+                            _gitRepoLinkController.text, context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: hexStringToColor("fdbb2d"),
+                      ),
+                      child: const Text('Submit'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ));
 
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                submitAssignment();
-              },
-              style: ElevatedButton.styleFrom(
-                primary: hexStringToColor("fdbb2d"),
-              ),
-              child: const Text('Submit'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void submitAssignment() async {
-    String gitRepoLink = _gitRepoLinkController.text;
-    String assignmentId = widget.assignmentId;
-    String studentId = await _authService.getCurrentUserId() ?? '';
-
-    // checking if both assignmentId and studentId are not empty
-    if (assignmentId.isNotEmpty && studentId.isNotEmpty) {
-      try {
-        // submit the assignment using the assignmentService
-        await _assignmentService.submitAssignment(
-          assignmentId,
-          studentId,
-          gitRepoLink,
-        );
-
-        // show a dialog to indicate successful submission
-        // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Submission Successful'),
-            content: const Text('Your assignment has been submitted.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  // Close the dialog and navigate back twice to return to the previous screen
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-            backgroundColor: hexStringToColor("fdbb2d"),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      } catch (error) {
-        // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Submission Failed'),
-            content: const Text(
-              'There was an error while submitting your assignment. Please try again.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-            backgroundColor: hexStringToColor("fdbb2d"),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-    } else {
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Incomplete Submission'),
-          content: const Text('Please make sure to select an assignment'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-          backgroundColor: hexStringToColor("fdbb2d"),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
-    }
   }
 }

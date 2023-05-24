@@ -1,7 +1,11 @@
-import 'package:elosystem/screens/quizScreens/QuestionaireListScreen.dart';
+import 'package:elosystem/screens/assignmentScreens/teacher/teachAssignmentProviders/teacherAssignmentProvider.dart';
+import 'package:elosystem/screens/quizScreens/questionnaireListScreen.dart';
+import 'package:elosystem/screens/quizScreens/questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
+import 'package:elosystem/screens/scoreScreens/scoreboardProviders/scoreboardProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:elosystem/reusable_widgets/resuable_widgets.dart';
+import 'package:provider/provider.dart';
 import '../utils/fire_service/auth_service.dart';
 import '../utils/color_utils.dart';
 import 'assignmentScreens/teacher/assignment_screen.dart';
@@ -111,7 +115,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AssignmentScreen(),
+                                builder: (context) => AssignmentScreen()
                               ),
                             );
                           }),
@@ -120,7 +124,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QuestionnaireListScreen(),
+                                builder: (context) => QuestionnaireListScreen()
                               ),
                             );
                           }),
@@ -129,7 +133,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ScoreScreen(),
+                                builder: (context) => ScoreScreen()
                               ),
                             );
                           }),

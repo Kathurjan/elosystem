@@ -1,58 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
 
 class DropDownButtonCustom extends StatefulWidget {
-  final bool initialValue;
-  final Function(bool) onChanged;
+  final QuestionCreationState state;
 
   const DropDownButtonCustom({
-    Key? key,
-    required this.initialValue,
-    required this.onChanged,
+    Key? key, required this.state
   }) : super(key: key);
 
   @override
   _DropDownButtonCustomState createState() => _DropDownButtonCustomState();
 }
 
-
 class _DropDownButtonCustomState extends State<DropDownButtonCustom> {
-  bool _dropdownValue = false;
 
   @override
   void initState() {
     super.initState();
-    _dropdownValue = widget.initialValue;
+    widget.state.dropdownValue;
   }
 
-  void dropdownCallback(bool? selectedValue) {
-    if (selectedValue is bool) {
-      setState(() {
-        _dropdownValue = selectedValue;
-      });
-
-      // Invoke the onChanged callback in the parent widget
-      widget.onChanged(_dropdownValue);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     List<bool> boolList = <bool>[true, false];
 
     return DropdownButton(
-      items: boolList
-          .map<DropdownMenuItem<bool>>(
-            (bool value) {
+      items: boolList.map<DropdownMenuItem<bool>>(
+        (bool value) {
           return DropdownMenuItem<bool>(
             value: value,
             child: Text(value.toString()),
           );
         },
-      )
-          .toList(),
-      value: _dropdownValue,
-      onChanged: dropdownCallback,
+      ).toList(),
+      value: widget.state.dropdownValue,
+      onChanged: (newValue) => widget.state.changeDropDown(newValue),
       borderRadius: BorderRadius.circular(2),
       style: TextStyle(
         fontSize: 16,

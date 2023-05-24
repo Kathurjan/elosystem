@@ -2,7 +2,7 @@ class Questionnaire {
   List<QuizQuestion> quizQuestion = [];
   final bool weeklyQuiz;
   final bool dailyQuiz;
-  final String ?uId;
+  String ?uId;
   String ?name;
 
   Questionnaire({required this.quizQuestion, required this.dailyQuiz, required this.weeklyQuiz, this.uId, this.name});
