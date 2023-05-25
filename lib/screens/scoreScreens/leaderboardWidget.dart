@@ -3,10 +3,6 @@ import 'package:elosystem/screens/teacher_screen.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../reusable_widgets/resuable_widgets.dart';
-import '../../utils/color_utils.dart';
-import '../../utils/fire_service/auth_service.dart';
-import '../../utils/slideAnimation.dart';
 
 class LeaderboardWidget extends StatelessWidget {
   final List<Map<String, dynamic>> leaderboards;

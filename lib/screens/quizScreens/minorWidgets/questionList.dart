@@ -1,21 +1,17 @@
-import 'package:elosystem/DTO/questionaireDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'answerDialog.dart';
+import '../questionnaireProvideClasses/teacherQuestionnaireProviders.dart';
 
 class QuestionList extends StatefulWidget {
-  final List<QuizQuestion> questions;
-  final Function(int) onChanged;
+  final QuestionCreationState state;
 
-  QuestionList({Key? key, required this.questions, required this.onChanged}) : super(key: key);
+  QuestionList({Key? key, required this.state}) : super(key: key);
 
   @override
   _QuestionListState createState() => _QuestionListState();
 }
 
 class _QuestionListState extends State<QuestionList> {
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -23,22 +19,24 @@ class _QuestionListState extends State<QuestionList> {
         physics: ClampingScrollPhysics(),
         padding: EdgeInsets.zero,
         shrinkWrap: true,
-        itemCount: widget.questions.isNotEmpty ? widget.questions.length : 1,
+        // check item count to diplay default if false
+        itemCount: widget.state.questionnaire.quizQuestion.isNotEmpty ? widget.state.questionnaire.quizQuestion.length : 1,
         itemBuilder: (BuildContext context, int index) {
-          if (widget.questions.isEmpty) {
+          if (widget.state.questionnaire.quizQuestion.isEmpty) {
             return Container(
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: Text(
                     'No answers added',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black,
+                    fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             );
           } else {
-            final questionTxt = widget.questions[index].question;
+            final questionTxt = widget.state.questionnaire.quizQuestion[index].question;
             return Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
@@ -54,14 +52,13 @@ class _QuestionListState extends State<QuestionList> {
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          setState(() {
-                            widget.questions.removeAt(index);
-                          });
+                          widget.state.removeQuestion(index);
+
                         },
                       ),
                       GestureDetector(
                         onTap: () {
-                          widget.onChanged(index);
+                          widget.state.onQuestionChangeCall(index, context);
                         },
                         child: Icon(
                           Icons.edit,

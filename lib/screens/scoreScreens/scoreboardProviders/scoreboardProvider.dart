@@ -13,7 +13,6 @@ class ScoreScreenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> loadLeaderboard() async {
     leaderboards = await _authService.getScore();
     leaderboards.sort((a, b) => b['score'].compareTo(a['score']));
