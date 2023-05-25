@@ -1,3 +1,6 @@
+import 'package:elosystem/screens/home_screen.dart';
+import 'package:elosystem/screens/teacher_screen.dart';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +43,7 @@ class LeaderboardWidget extends StatelessWidget {
 
         if (userType == 'student') {
           if (leaderboardName != loggedInUserName) {
+            print(leaderboardName + loggedInUserName);
             displayedName = generateAnonymousName();
           }
         }

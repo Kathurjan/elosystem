@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import '../../../utils/fire_service/auth_service.dart';
 
 class ScoreScreenProvider with ChangeNotifier {
@@ -9,8 +8,8 @@ class ScoreScreenProvider with ChangeNotifier {
   String userTypes = "";
 
   Future<void> loadLoggedInUserName() async {
-    final username = _authService.getCurrentUserName() as String;
-    loggedInUserName = username;
+    final username = await _authService.getCurrentUserName();
+    loggedInUserName = username as String;
     notifyListeners();
   }
 
