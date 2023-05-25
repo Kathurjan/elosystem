@@ -1,3 +1,4 @@
+import 'package:elosystem/screens/assignmentScreens/student/assignmentSubmission.dart';
 import 'package:elosystem/screens/assignmentScreens/teacher/assignment_screen.dart';
 import 'package:elosystem/screens/quizScreens/questionnaireProvideClasses/studentQuestionnaireProviders.dart';
 import 'package:elosystem/screens/quizScreens/questionnaireSelectionScreen.dart';
@@ -142,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AssignmentScreen()
+                                builder: (context) => ListOfAssignmentStudent()
                               ),
                             );
                           }),
