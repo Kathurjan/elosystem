@@ -1,4 +1,5 @@
 import 'package:elosystem/screens/home_screen.dart';
+import 'package:elosystem/screens/scoreScreens/scoreboardProviders/scoreboardProvider.dart';
 import 'package:elosystem/screens/teacher_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,10 @@ class _ScoreScreenState extends State<ScoreScreen> {
   @override
   void initState() {
     super.initState();
-    loadLeaderboard();
-    loadLoggedInUserName();
-    loadUserType();
+    scoreScreenProvider = ScoreScreenProvider();
+    scoreScreenProvider.loadLeaderboard();
+    scoreScreenProvider.loadLoggedInUserName();
+    scoreScreenProvider.loadUserType();
   }
 
   Future<void> loadLoggedInUserName() async {
