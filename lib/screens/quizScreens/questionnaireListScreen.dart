@@ -22,7 +22,7 @@ class _QuestionnaireListScreenState extends State<QuestionnaireListScreen> {
       child: Consumer<QuestionnaireListState>(builder: (context, state, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Home'),
+            title: Text('Questionnaire list'),
             backgroundColor: hexStringToColor("fdbb2d"),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
